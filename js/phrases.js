@@ -4883,6 +4883,7 @@ window.ABLAK_SAY = [
     ru: 'Я хочу заблокировать карту, я её потеряла.',
     label_en: 'Block my lost card',
     en: 'I would like to block my card, I have lost it.',
+    alts_en: ['Block my card', 'Please block my card', 'I want to block my card'],
   },
   {
     id: 'say_no_loan',
@@ -5450,5 +5451,27 @@ window.ABLAK_SAY = [
     ru: 'Как я могу обжаловать решение?',
     label_en: 'How to appeal?',
     en: 'How can I appeal the decision?',
+  },
+  {
+    id: 'say_clinic_dentist',
+    scenario: 'clinic',
+    label: 'Хочу к стоматологу',
+    hu: 'Szeretnék időpontot kérni fogorvoshoz.',
+    ru: 'Я хочу записаться к стоматологу.',
+    label_en: 'Appointment with a dentist',
+    en: 'I would like to make an appointment with a dentist.',
+    alts_en: ['I want to see a dentist', 'I need a dentist', 'I need to see a dentist'],
+    alts_ru: ['Мне нужен стоматолог', 'Хочу к зубному врачу'],
+  },
+  {
+    id: 'say_clinic_toothache',
+    scenario: 'clinic',
+    label: 'Болит зуб',
+    hu: 'Fáj a fogam.',
+    ru: 'У меня болит зуб.',
+    label_en: 'My tooth hurts',
+    en: 'My tooth hurts.',
+    alts_en: ['I have a toothache', 'I have a tooth ache', 'My tooth is hurting'],
+    alts_ru: ['Зубная боль'],
   }
 ];

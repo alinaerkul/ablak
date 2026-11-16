@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.groq.com https://generativelanguage.googleapis.com; media-src 'self' blob:; base-uri 'self'; form-action 'none'; object-src 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Ablak is a counter-side coach for Hungary: it tells you what is being asked, what to do, and which document to hand over.">
-<title>Ablak — a counter-side coach for Hungary</title>
+<meta name="description" content="Ablak is a counter-side guide for Hungary: it tells you what is being asked, what to do, and which document to hand over.">
+<title>Ablak — a counter-side guide for Hungary</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232D4A35'/%3E%3Cg stroke='%23fff' stroke-width='2.5' fill='none'%3E%3Cpath d='M9 25V14a7 7 0 0114 0v11M16 8v17'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -165,6 +166,32 @@
             <div id="alternatives-list" class="alt-list"></div>
           </div>
         </section>
+
+      <div class="sayit reply-box">
+        <h3 id="sayit-title"></h3>
+        <p class="hint" id="sayit-hint" style="margin:6px 0 12px"></p>
+        <div class="type-row">
+          <button id="sayit-mic" type="button" class="btn btn-secondary">🎙 <span></span></button>
+          <input id="sayit-input" type="text" autocomplete="off" aria-label="Say it in Hungarian">
+          <button id="sayit-go" type="button" class="btn btn-primary"></button>
+        </div>
+        <label class="pr-hard" style="margin:8px 0 0">
+          <input id="sayit-auto" type="checkbox" checked>
+          <span id="sayit-auto-label"></span>
+        </label>
+        <p id="sayit-status" class="hint" aria-live="polite" style="margin-top:8px"></p>
+        <div id="sayit-result" class="sayit-card" hidden>
+          <div class="result-head"><span id="sayit-badge" class="badge"></span></div>
+          <p id="sayit-hu" class="reply-hu" lang="hu"></p>
+          <p id="sayit-gloss" class="reply-ru"></p>
+          <p id="sayit-note" class="hint" hidden></p>
+          <button id="sayit-speak" type="button" class="btn btn-primary"></button>
+        </div>
+        <div id="sayit-more-wrap" style="margin-top:12px" hidden>
+          <span class="block-label" id="sayit-more-label"></span>
+          <div id="sayit-more" class="alt-list"></div>
+        </div>
+      </div>
       </div>
     </div>
 
@@ -232,7 +259,7 @@
             <span data-i18n="practice.hard"></span>
           </label>
           <div id="practice-input-row" class="text-input-row">
-            <input id="practice-input" type="text" autocomplete="off" lang="hu" data-i18n-ph="practice.placeholder">
+            <input id="practice-input" type="text" autocomplete="off" lang="hu" data-i18n-ph="practice.placeholder" aria-label="Your answer in Hungarian">
             <button id="practice-send" type="button" class="btn btn-primary" data-i18n="practice.send"></button>
             <button id="practice-mic" type="button" class="btn btn-ghost" data-i18n-title="practice.mic">🎙</button>
           </div>
@@ -415,6 +442,16 @@
 
     <hr>
 
+    <h3 class="setting-heading" data-i18n="settings.wHeading"></h3>
+    <p class="hint" data-i18n="settings.wHint"></p>
+    <label class="setting-label">
+      <input id="whisper-on" type="checkbox">
+      <span data-i18n="settings.wOn"></span>
+    </label>
+    <p id="whisper-status" class="hint"></p>
+
+    <hr>
+
     <div class="setting">
       <h3 class="setting-heading" data-i18n="settings.voices"></h3>
       <p id="voice-report" class="hint"></p>
@@ -435,9 +472,11 @@
 <script src="js/matcher.js"></script>
 <script src="js/speech.js"></script>
 <script src="js/llm.js"></script>
+<script src="js/whisper.js"></script>
 <script src="js/practice.js"></script>
 <script src="js/courier.js"></script>
 <script src="js/callsim.js"></script>
+<script src="js/sayit.js"></script>
 <script src="js/app.js"></script>
 <script src="js/home.js"></script>
 <script src="js/site.js"></script>

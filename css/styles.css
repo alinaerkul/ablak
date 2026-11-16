@@ -31,7 +31,7 @@
   /* roles */
   --ink:        var(--forest-dk);
   --ink-soft:   #4A5951;
-  --ink-faint:  #6C7A72;
+  --ink-faint:  #59665F;
   --paper:      var(--ivory);
   --card:       var(--white);
   --line:       var(--stone);
@@ -118,6 +118,7 @@ svg.i { width: 1.25em; height: 1.25em; flex: none; stroke: currentColor; fill: n
 .site-header {
   position: sticky; top: 0; z-index: 30;
   background: rgba(248,245,238,.94);
+  -webkit-backdrop-filter: saturate(1.2) blur(6px);   /* Safari before 18 needs the prefix */
   backdrop-filter: saturate(1.2) blur(6px);
 }
 .site-header .container {
@@ -310,7 +311,7 @@ input[type="text"], input[type="password"], select {
   border: 1px solid #CFCBBE; border-radius: 999px;
   font: 16px var(--font);
 }
-input[type="text"]::placeholder { color: #6C7A72; }
+input[type="text"]::placeholder { color: #59665F; }
 input:focus, select:focus { outline: 3px solid var(--forest); outline-offset: 1px; border-color: var(--forest); }
 select { border-radius: var(--radius-sm); }
 input[type="range"] { width: 100%; }
@@ -656,3 +657,16 @@ hr { border: none; border-top: 1px solid var(--line); margin: 20px 0; }
 @media (max-width: 400px) {
   .chip { font-size: 14px; padding: 0 10px; gap: 6px; }
 }
+
+/* reply in Hungarian (lives in the result column) */
+.reply-box { margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--line); }
+.reply-box h3 { font: 600 17px var(--font-head); }
+.reply-box .type-row { flex-wrap: wrap; align-items: center; }
+.reply-box .type-row input { flex: 1 1 100%; order: -1; }
+.reply-box .type-row .btn { flex: 1 1 0; min-height: 48px; white-space: nowrap; }
+.sayit-card { margin-top: 12px; border: 1.5px solid var(--sage); background: var(--sage-soft); border-radius: var(--radius); padding: 18px; }
+.sayit-card.is-model { border-color: #CFCBBE; background: var(--white); border-style: dashed; }
+#sayit-mic.is-listening { border-color: var(--risk); color: var(--risk); }
+
+/* Example chips are tappable: keep them at a real touch size. */
+.examples .alt-btn { min-height: 44px; }

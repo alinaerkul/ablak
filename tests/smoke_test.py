@@ -6,8 +6,15 @@ text-input path works in a browser with no speech recognition at all —
 which is exactly what a reviewer on Firefox or a locked-down machine gets.
 """
 
+import os
 import sys
 from playwright.sync_api import sync_playwright
+
+# Any Chrome will do. Set ABLAK_CHROME to override; otherwise the usual
+# macOS and Linux locations are tried.
+CHROME = os.environ.get("ABLAK_CHROME") or next(
+    (p for p in ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+                 "/usr/bin/google-chrome") if os.path.exists(p)), None)
 
 APP = "http://127.0.0.1:8000/index.html"
 TESTS = "http://127.0.0.1:8000/tests/index.html"
@@ -22,7 +29,7 @@ def check(name, condition, detail=""):
 def run():
     with sync_playwright() as p:
         browser = p.chromium.launch(
-            executable_path="/usr/bin/google-chrome",
+            executable_path=CHROME,
             args=["--no-sandbox", "--disable-dev-shm-usage"],
         )
         page = browser.new_page(viewport={"width": 420, "height": 900})
@@ -43,7 +50,10 @@ def run():
         page.goto(APP, wait_until="load")
         page.wait_for_timeout(500)
 
-        check("title renders", "Ablak" in page.inner_text("h1"))
+        check("brand and headline render",
+              "Ablak" in page.inner_text(".site-header .brand-name")
+              and "counter-side guide" in page.inner_text("h1"),
+              page.inner_text("h1"))
         # Count comes from the corpus, not a literal: with "Anywhere" selected
         # every speak-phrase is shown, grouped under counter headings.
         expected_say = page.evaluate("window.ABLAK_SAY.length")
@@ -66,6 +76,12 @@ def run():
         check("call simulator scenarios listed",
               page.locator("#sim-picker .scn-card").count() == page.evaluate(
                   "window.AblakCallSim.SCENARIOS.length"))
+        page.fill("#sayit-input", "Could you speak more slowly?")
+        page.click("#sayit-go")
+        page.wait_for_timeout(200)
+        check("say it: a prepared Hungarian phrase is offered",
+              "beszéljen lassabban" in page.inner_text("#sayit-hu"),
+              page.inner_text("#sayit-hu"))
         check("practice scenarios listed",
               page.locator("#practice-picker .scn-card").count() == page.evaluate(
                   "window.AblakPractice.SCENARIOS.length"))
@@ -211,6 +227,7 @@ def run():
         check("history accumulates entries",
               page.locator("#history li:not(.history-empty)").count() >= 4,
               str(page.locator("#history li:not(.history-empty)").count()))
+        page.click(".recent summary")   # history is collapsed by design
         page.click("#clear-history")
         page.wait_for_timeout(100)
         check("history clears",

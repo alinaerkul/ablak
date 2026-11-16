@@ -24,6 +24,9 @@
     require('../js/practice.js');
     require('../js/courier.js');
     require('../js/callsim.js');
+    require('../js/llm.js');
+    require('../js/sayit.js');
+    require('../js/whisper.js');
     module.exports = factory(global.window);
     if (require.main === module) module.exports.run(true);
   } else {
@@ -531,6 +534,87 @@
       assert('callsim: accepted new time books the table', accepted.outcome.status === 'done');
       var open = CS.playThrough('cafe', { full: false }, []);
       assert('callsim: a free table books without asking', open.outcome.status === 'done');
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* 16. Say it in Hungarian, and the optional Whisper engine         */
+    /* ---------------------------------------------------------------- */
+
+    var SI = win.AblakSayIt;
+    assert('say-it module loaded', SI && typeof SI.resolve === 'function');
+    if (SI) {
+      SI.reset();
+      var asks = [
+        ['Could you speak more slowly?', 'say_slower'],
+        ['Please repeat that', 'say_repeat'],
+        ['Can you write it down?', 'say_write'],
+        ['Where is the milk?', 'say_sm_where_milk'],
+        ['How do I weigh the fruit?', 'say_sm_how_weigh'],
+        ['I have a headache', 'say_clinic_headache'],
+        ['Говорите медленнее', 'say_slower'],
+        ['Где молоко?', 'say_sm_where_milk'],
+        ['У меня болит голова', 'say_clinic_headache']
+      ];
+      var wrong = asks.filter(function (a) {
+        var r = SI.resolve(a[0]);
+        return !(r.kind === 'phrase' && r.phrase.id === a[1]);
+      }).map(function (a) { return a[0]; });
+      assert('say-it: ordinary requests resolve to their prepared phrase', wrong.length === 0, wrong.join(' | '));
+
+      /* A word the user said must not be silently dropped: with no dentist
+       * phrase the doctor phrase is NOT a fair answer to "see a dentist". */
+      var dentist = SI.resolve('I want to see a dentist');
+      assert('say-it: a dentist request resolves to the dentist phrase',
+        dentist.kind === 'phrase' && dentist.phrase.id === 'say_clinic_dentist');
+      /* "Block my card" and "my card has been blocked" use the same words with
+       * opposite meaning. The first must never silently become the second. */
+      var blockIt = SI.resolve('Block my card');
+      assert('say-it: "block my card" is never turned into "my card has been blocked"',
+        blockIt.kind !== 'phrase' || blockIt.phrase.id === 'say_block_card',
+        blockIt.kind + ' ' + (blockIt.phrase ? blockIt.phrase.id : ''));
+      var derm = SI.resolve('I want to see a dermatologist');
+      assert('say-it: an unknown specialist is not answered with the doctor phrase',
+        derm.kind === 'none', derm.kind);
+      assert('say-it: a toothache resolves to the toothache phrase',
+        SI.resolve('My tooth hurts').kind === 'phrase' && SI.resolve('My tooth hurts').phrase.id === 'say_clinic_toothache');
+
+      var offTopic = ['I want to buy a spaceship', 'Tell me a joke', 'Hello', 'What time is the football match'];
+      assert('say-it: off-topic requests are not matched to a phrase',
+        offTopic.every(function (t) { return SI.resolve(t).kind !== 'phrase'; }));
+
+      assert('say-it: language is detected from the script',
+        SI.detectLang('Где молоко') === 'ru' && SI.detectLang('Where is the milk') === 'en');
+
+      /* The meaning shown to the user is what the matched phrase really says. */
+      var phrases = win.ABLAK_SAY;
+      var selfMiss = phrases.filter(function (p) {
+        var r = SI.resolve(p.en, 'en');
+        return r.kind === 'none';
+      });
+      assert('say-it: every prepared phrase is at least a suggestion for its own wording',
+        selfMiss.length === 0, selfMiss.map(function (p) { return p.id; }).join(', '));
+    }
+
+    var LL = win.AblakLLM;
+    if (LL && LL.pickModel) {
+      assert('llm: prefers the recommended Groq model when it is available',
+        LL.pickModel(['whisper-large-v3', 'openai/gpt-oss-20b', 'openai/gpt-oss-120b']) === 'openai/gpt-oss-120b');
+      assert('llm: never picks a speech or moderation model',
+        LL.pickModel(['whisper-large-v3', 'canopylabs/orpheus-v1-english', 'meta-llama/llama-guard-4-12b', 'some/chat-model']) === 'some/chat-model');
+      assert('llm: returns null when nothing usable is listed',
+        LL.pickModel(['whisper-large-v3-turbo']) === null && LL.pickModel([]) === null && LL.pickModel(null) === null);
+    }
+
+    var WH = win.AblakWhisper;
+    assert('whisper module loaded', WH && typeof WH.errorCode === 'function');
+    if (WH) {
+      assert('whisper: a rejected key is reported as bad-key',
+        WH.errorCode(401) === 'bad-key' && WH.errorCode(403) === 'bad-key');
+      assert('whisper: the free limit is reported as rate-limit', WH.errorCode(429) === 'rate-limit');
+      assert('whisper: other failures keep their status', WH.errorCode(500) === 'http-500');
+      assert('whisper: is off unless the user opted in', WH.isEnabled() === false);
+      assert('whisper: vocabulary hint keeps Hungarian diacritics',
+        WH.PROMPT.indexOf('lakcímkártyáját') !== -1);
     }
 
     /* ---------------------------------------------------------------- */

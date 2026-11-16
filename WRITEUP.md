@@ -1,75 +1,33 @@
-# Ablak — a voice assistant for the counter
+# Ablak: a counter-side guide for Hungary
 
 **Hiya Voice AI Challenge · Real-Time Assistance · Alina Erkulova**
+Live: https://alinaerkul.github.io/ablak/ · Code: https://github.com/alinaerkul/ablak
 
----
+I needed a dentist. At a state hospital I tried to book one with my TAJ card, but the receptionist spoke only Hungarian and a translation app did not help. I understood “third floor, one o’clock”, went up, waited an hour, never got the appointment, and left for work. In the end I waited for a trip to Kyrgyzstan and saw a dentist there.
 
-*"Kérem a lakcímkártyáját."* I did not know what it meant, and the clerk had
-already said it twice. I had the right document in my folder. I handed over my
-passport.
+## What I built and who it is for
 
-**Ablak** is for that twenty seconds. It listens to the Hungarian spoken at an
-immigration, bank, clinic or supermarket counter and answers in your own language — Russian,
-or English — with the only three things that matter while someone is waiting
-for you: what they are asking, what
-to do right now, and **which document to take out of the folder**. Then it speaks
-a reply back in Hungarian, so you can repeat it. Understanding is only half of
-standing at a counter.
+**Ablak** listens to the Hungarian spoken at an immigration office, bank, clinic or supermarket and tells you, in English or Russian, what is being asked, what to do right now, and **which document to take out of the folder**. It then speaks a Hungarian reply you can repeat. It is for international students and newcomers who have shop-level Hungarian and none for an official counter. I am one of them (Bishkek to Budapest, Stipendium Hungaricum), and I also run **Jany Jashoo**, an information platform for Central Asian students arriving in Hungary, which Ablak could become part of.
 
-## Who it is for
-
-International students and newcomers who have functional Hungarian for a shop
-and none for a government office. I am one of them — I moved from Bishkek to
-Budapest on a Stipendium Hungaricum scholarship — and I run **Jany Jashoo**, a
-relocation platform used by 100+ Central Asian students arriving in Hungary. The
-questions people bring there are, over and over, the questions asked at these
-three windows.
+Around the core there are four more tools: **say it in Hungarian** (speak English or Russian, see the matching prepared Hungarian phrase, tap to speak it), a **practice mode** where the app plays the clerk in Hungarian, a **courier card** with your address and fixed phrases, and a **call simulator** that shows how an agent could phone on your behalf (simulated; no real call is made).
 
 ## Why voice, and not a keyboard
 
-Both hands hold documents. Your eyes are on the clerk and the number display.
-And you cannot type a word you could not make out: Hungarian agglutinates, so
-*lakcímkártya* reaches you as *lakcímkártyáját*, and a newcomer cannot retype
-that into a translation box. A microphone does not ask them to. The clerk is
-waiting; fifteen seconds of typing is not available.
+Both hands hold documents and your eyes are on the clerk and the number display. The clerk has asked a question and is waiting, so fifteen seconds of typing is not available. And you cannot type a word you could not make out: Hungarian agglutinates, so *lakcímkártya* arrives as *lakcímkártyáját*, and a newcomer cannot retype that. Where a keyboard does the job equally well (the practice answers, the courier card), I offer typing too, and the page says so.
 
 ## What it does differently
 
-**It refuses to answer when it is not sure.** That is the design, not a
-limitation. A confidently wrong answer at an immigration counter costs the
-appointment — or a signature you cannot take back. A language model is fluent
-about inputs it misheard and cannot tell you which ones it got right.
+**It refuses when it is not sure.** A confidently wrong answer at an immigration counter costs an appointment, or a signature you cannot take back. So the core is not a model call but a written, reviewable set of 212 counter phrases in 765 spoken forms. Two signals with different failure modes are combined: character 4-gram similarity, which survives Hungarian suffixes and recognition noise, and IDF-weighted keyword stems, so boilerplate openings do not dominate. The result is one of three visibly different outcomes: high confidence, check this, or not understood. A margin guard downgrades near-ties. An optional model fallback exists for phrases outside the set: off by default, labelled unverified, and never allowed to name a document. The simulated agent follows the same spirit: it says it is an AI, asks you before accepting a change, and never gives identity or health numbers.
 
-So the core is not a model call. It is a curated corpus of 212 phrases officials
-actually say, in 765 surface forms, matched by two signals with different failure
-modes: character 4-gram similarity, which survives Hungarian suffixes and
-speech-recognition noise, and IDF-weighted keyword stems, so that the boilerplate
-opening half the corpus does not dominate. The matcher returns a calibrated
-score, and below threshold it says so and offers to ask the clerk to repeat more
-slowly. Five of the 54 unit tests assert that it refuses. A margin guard
-downgrades near-ties, because two indistinguishable scores are ambiguity the user
-must see, not a coin flip to settle silently.
+It needs no key, account or backend. 140 automated checks run in the browser, and a second suite drives the real page in Chrome. They have caught real bugs, including a stem collision that would have told a user to hand over a physical card instead of answering a question; these are written up in `ai.md`.
 
-Every answer is therefore auditable by a human before a user ever sees it. An
-optional model fallback exists for phrases outside the corpus — off by default,
-labelled *unverified*, and never permitted to name a document.
+## Honest limits
 
-It runs with **no API key, no account and no backend**: `python3 -m http.server`
-and Chrome. Typed text and the matcher stay on the device; spoken input goes
-through the browser's own speech service.
+All 212 phrases were generated by an AI assistant; I reviewed their content, and a native Hungarian speaker has not yet reviewed the wording. Chrome's speech service (Google's) does the transcription, and Hungarian recognition degrades in noisy rooms; an optional Whisper engine (own free Groq key) is there for that case. The confidence thresholds are fitted to my own test phrases, not to real logged speech.
 
 ## With more time
 
-Replace my 212 phrases with real ones — mined from Jany Jashoo and logged, with
-consent, in an actual waiting room. The matcher is finished; the corpus is the
-product, and mine is written from memory rather than from data. Then Ukrainian,
-Serbian and Vietnamese — the app already carries two explanation languages, and
-the Hungarian side never changes, so each new one is translation rather than
-engineering; on-device
-recognition via `whisper.cpp` in WASM, to make the privacy claim absolute; and
-learning from every refusal, since each unmatched phrase is a gap the corpus
-should close.
-
----
-
-Repository, setup and design notes: `README.md` · AI tool use: `ai.md`
+1. Replace my phrases with real ones: survey international students about what they were asked and could not follow, and ask staff at hospitals and public offices which phrases they say most. The matcher is ready; the corpus is the product.
+2. Real calls on the user's behalf, starting with low-risk ones (a table, a courier), and a Telegram version.
+3. More explanation languages (Ukrainian, Serbian, Vietnamese): translation, not engineering, since the Hungarian side never changes.
+4. On-device recognition (`whisper.cpp` in WASM) to make the privacy claim absolute, and learning from every refusal.

@@ -61,7 +61,7 @@
     'rate-value', 'autospeak', 'llm-provider', 'llm-key', 'llm-save',
     'llm-status', 'voice-report', 'voice-test', 'corpus-size',
     'lang-toggle', 'lang-current', 'mic-alert', 'mic-alert-text', 'mic-retry',
-    'essentials', 'result-empty'
+    'essentials', 'result-empty', 'whisper-on', 'whisper-status'
   ].forEach(function (id) {
     el[id] = document.getElementById(id);
   });
@@ -362,16 +362,24 @@
   /* Listener wiring                                                    */
   /* ------------------------------------------------------------------ */
 
+  /* The recognition engine is chosen in one place (js/whisper.js): the
+   * browser's own by default, or Whisper if the user opted in. Re-callable, so
+   * the Settings switch takes effect without a reload. */
   function setupListener() {
-    if (!Speech.Listener.isSupported()) {
+    if (listener && state.listening) { try { listener.stop(); } catch (e) {} }
+    listener = null;
+    if (!window.AblakRecognition.isSupported()) {
       el.unsupported.hidden = false;
       el['mic-btn'].disabled = true;
       el['mic-label'].textContent = T('mic.unavailable');
       setStatus('status.noSpeech', null);
       return;
     }
+    el.unsupported.hidden = true;
+    el['mic-btn'].disabled = false;
+    el['mic-label'].textContent = T('mic.start');
 
-    listener = new Speech.Listener({
+    listener = window.AblakRecognition.create({
       lang: 'hu-HU',
       onPartial: function (text) {
         showTranscript(text, true);
@@ -386,6 +394,11 @@
           el['mic-btn'].classList.add('is-listening');
           el['mic-label'].textContent = T('mic.stop');
           if (!state.speaking) setStatus('status.listening', 'live');
+        } else if (s === 'transcribing') {
+          state.listening = false;
+          el['mic-btn'].classList.remove('is-listening');
+          el['mic-label'].textContent = T('mic.start');
+          setStatus('status.transcribing', 'thinking');
         } else {
           state.listening = false;
           el['mic-btn'].classList.remove('is-listening');
@@ -401,6 +414,9 @@
           'service-not-allowed': 'The browser blocked speech recognition.',
           'audio-capture': 'No microphone found.',
           'network': 'Speech recognition needs an internet connection. Text input works offline.',
+          'no-speech': 'I did not hear anything. Try again, closer to the microphone.',
+          'bad-key': 'Groq rejected the key. Check it in Settings, or switch back to the browser engine.',
+          'rate-limit': 'The Whisper free limit was reached. Wait a minute, or switch back to the browser engine in Settings.',
           'unsupported': T('unsupported.strong')
         };
         el['status-text'].textContent = T('status.ready');
@@ -558,6 +574,7 @@
     if (window.AblakPractice && window.AblakPractice.rerender) window.AblakPractice.rerender();
     if (window.AblakCourier && window.AblakCourier.rerender) window.AblakCourier.rerender();
     if (window.AblakCallSim && window.AblakCallSim.rerender) window.AblakCallSim.rerender();
+    if (window.AblakSayIt && window.AblakSayIt.rerender) window.AblakSayIt.rerender();
     renderHistory();
     reportVoices();
     reportLlmStatus();
@@ -578,6 +595,13 @@
   /* ------------------------------------------------------------------ */
   /* Events                                                             */
   /* ------------------------------------------------------------------ */
+
+  function reportWhisper() {
+    var W = window.AblakWhisper;
+    el['whisper-on'].checked = W.isEnabled();
+    el['whisper-status'].textContent = W.isEnabled() ? T('settings.wOnStatus')
+      : (W.hasKey() ? '' : T('settings.wNeedKey'));
+  }
 
   function bindEvents() {
     el['lang-toggle'].addEventListener('click', toggleLanguage);
@@ -647,6 +671,18 @@
       speakHungarian('Jó napot kívánok. Kérem a lakcímkártyáját.');
     });
 
+    el['whisper-on'].addEventListener('change', function () {
+      var W = window.AblakWhisper;
+      if (this.checked && !W.hasKey()) {
+        this.checked = false;
+        el['whisper-status'].textContent = T('settings.wNeedKey');
+        return;
+      }
+      W.setEnabled(this.checked);
+      reportWhisper();
+      setupListener();
+    });
+
     el['llm-save'].addEventListener('click', function () {
       var provider = el['llm-provider'].value;
       var key = el['llm-key'].value.trim();
@@ -657,6 +693,8 @@
       }
       LLM.saveConfig(provider, key);
       el['llm-status'].textContent = T('settings.llmSaved');
+      reportWhisper();
+      setupListener();
     });
   }
 
@@ -673,6 +711,7 @@
 
     var saved = LLM.loadConfig();
     if (saved && saved.provider) el['llm-provider'].value = saved.provider;
+    reportWhisper();
 
     applyLanguage();
   }

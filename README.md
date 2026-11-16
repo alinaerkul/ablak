@@ -1,6 +1,6 @@
 # Ablak
 
-**A voice assistant for the counter.** Hungarian in, your own language out, in real time —
+**A counter-side guide for Hungary.** Hungarian in, your own language out, in real time —
 for the moment a newcomer is standing at an immigration window with documents in
 both hands and does not understand the question they were just asked.
 
@@ -9,14 +9,17 @@ government office. "Fáradjon a kettes ablakhoz." Go to window two.
 
 Submitted to the **Hiya Voice AI Challenge**, track: *Real-Time Assistance*.
 
+**Live demo: https://alinaerkul.github.io/ablak/** (Chrome or Edge, for the microphone).
+
 ---
 
 ## Run it
 
-No API key. No account. No install. No network required after the first load.
+No API key. No account. No install. The matcher runs entirely in the page; speech
+recognition in Chrome and the web fonts need an internet connection.
 
 ```bash
-git clone <this-repo>
+git clone https://github.com/alinaerkul/ablak.git
 cd ablak
 python3 -m http.server 8000
 ```
@@ -34,9 +37,10 @@ microphone permission, which is why the server is needed.
 
 ### If you don't speak Hungarian
 
-You don't need to. Scroll to **«Ввод текстом»** (*Text input*) and click any of
-the six example buttons. They run through exactly the same matcher as speech —
-the microphone is just one way in.
+You don't need to. In the middle column of the workspace, click any of the
+example buttons under the text box (or type your own). They run through exactly
+the same matcher as speech — the microphone is just one way in. The remaining
+examples below are the same phrases to type.
 
 The examples are chosen to show behaviour, not to flatter it:
 
@@ -67,19 +71,21 @@ Settings → *Проверить венгерский голос* reports whethe
 
 ## Run the tests
 
+Open **http://localhost:8000/tests/index.html** (with the server running): it
+runs 140 assertions in the browser and should report `140 passed · 0 failed`.
+The same file also runs under node if you have it:
+
 ```bash
-node tests/matcher.tests.js     # 54 assertions, no dependencies
+node tests/matcher.tests.js     # same assertions, no dependencies
 ```
 
-Or open **http://localhost:8000/tests/index.html** for the same assertions in the
-browser.
-
-There is also a browser-driven end-to-end suite (40 assertions) in
-`tests/smoke_test.py`, which loads the real page in Chrome and drives it:
+There is also a browser-driven end-to-end suite in `tests/smoke_test.py`, which
+loads the real page in Chrome and drives it. It uses the server on port 8000, and
+it looks for Chrome in the usual macOS and Linux places (set `ABLAK_CHROME` to point at another):
 
 ```bash
 pip install playwright && playwright install chromium
-python3 tests/smoke_test.py      # needs the server running on :8111
+python3 tests/smoke_test.py      # needs the server running on :8000
 ```
 
 Both suites found real bugs during development, listed in `ai.md`.
@@ -102,9 +108,30 @@ Both suites found real bugs during development, listed in `ai.md`.
 5. **Refuses when unsure.** Below the confidence threshold it says it did not
    understand and offers to ask the official to repeat more slowly.
 
-The user can also initiate: eight ready phrases ("please speak more slowly",
-"could you write that down", "which documents do I need to bring") spoken aloud
-in Hungarian on one tap.
+The user can also initiate. Four essential phrases ("could you repeat that",
+"please speak more slowly", "could you write that down", "I do not understand")
+and 111 ready phrases grouped by counter are spoken aloud in Hungarian on one tap.
+
+The other direction is covered too: **Your reply in Hungarian**, in the result column
+right under the guidance. Speak or type in English or Russian; the app matches your words to the closest of the 111 prepared
+Hungarian phrases and shows what it means before you tap *Speak it*. Nothing is
+said aloud automatically, because word overlap cannot tell "block my card" from
+"my card has been blocked". If a free AI key is saved in Settings, anything that is
+not a prepared phrase is translated by the model instead, labelled as an
+unverified machine translation with a back-translation to check.
+
+Three more tools sit on the home page, each opening in place:
+
+- **Practice a booking call.** The app plays the clerk in Hungarian for five
+  scripted situations (café, doctor, bank, supermarket, immigration); you answer by
+  voice, typing or tapping a suggested reply.
+- **Courier card.** Your address, floor, door and phone in large type, with fixed
+  Hungarian phrases for a delivery person. Nothing is saved.
+- **Call simulator.** A scripted, simulated call in which an agent speaks Hungarian
+  on your behalf. It says first that it is an AI, pauses to ask you before it
+  accepts a change or says a gate code, and hands the call back to you when asked
+  for a health-insurance number. No real call is made; it shows the design of the
+  planned real thing.
 
 ---
 
@@ -148,7 +175,7 @@ and you may have agreed to something you cannot undo.
 An LLM produces fluent output for every input, including inputs it misheard, and
 cannot tell you which ones it got right. The matcher can: it returns a calibrated
 score, and below threshold it declines and offers to ask the clerk to repeat.
-Five of the 54 unit tests assert that it refuses. The refusal is a feature, and
+Several of the 140 checks assert that it refuses. The refusal is a feature, and
 it is the feature that makes the rest trustworthy.
 
 There is a **margin guard** on top of the threshold: if the runner-up scores
@@ -181,10 +208,12 @@ weight.
 
 ### Privacy
 
-In the default mode no audio and no transcript leaves the device beyond the
-browser's own speech recognition. There is no backend, no account, no analytics
-and nothing to log. That matters when the audio is a person's immigration
-interview.
+Typed text and the matcher stay on the device. Spoken input goes through the
+browser's own speech service (in Chrome, Google's), which Ablak never receives.
+The page loads three web fonts from Google Fonts, so a visitor's IP address is
+sent to Google at load. There is no backend, no account, no analytics and nothing
+to log. A content security policy in each page limits where it can send data to
+Google Fonts and the two optional AI providers. `privacy.html` states this in full.
 
 ---
 
@@ -204,6 +233,16 @@ The key is typed into the UI and kept in `localStorage` on the user's own device
 There is no server, so there is nowhere else for it to go, and nothing is ever
 committed to the repository.
 
+### Optional: Whisper recognition
+
+If Chrome mishears Hungarian (noise, accent), Settings → *Better Hungarian
+recognition* switches the microphone to Groq's hosted Whisper large v3: it records
+a short clip, stops when you stop talking, sends it to Groq with your own free key
+(the same one saved above), and feeds the transcript to the same matcher. It is off
+by default, the audio leaves the device, and nothing about the matcher or its
+refusal thresholds changes. It also lets the microphone work in browsers without
+built-in speech recognition.
+
 Model answers are treated differently from corpus answers, by design:
 
 - labelled **«Не проверено»** (*unverified*) with the provider named
@@ -216,23 +255,32 @@ Model answers are treated differently from corpus answers, by design:
 ## Project layout
 
 ```
-index.html              the whole UI
-css/styles.css          styling; constraints come from the use case, not taste
+index.html              the app: hero, workspace, tool cards that open in place
+how-it-works.html       design and engineering explanation
+privacy.html            what stays in the browser, what leaves, limits
+about.html              story, contact
+css/styles.css          the design system; class names are a contract with js/
 js/i18n.js              interface language (en/ru); Hungarian is never translated
-js/phrases.js           the corpus — 212 cards, 765 surface forms, 109 user phrases
+js/phrases.js           the corpus — 212 cards, 765 surface forms, 111 user phrases
 js/matcher.js           n-gram + IDF matcher and confidence calibration
 js/speech.js            Web Speech API wrappers (recognition + synthesis)
 js/llm.js               optional, opt-in open-vocabulary fallback
+js/whisper.js           optional Whisper microphone engine (Groq, own key)
+js/sayit.js             say it in Hungarian: prepared phrases, optional translation
+js/practice.js          booking practice: scripted clerk dialogues
+js/courier.js           courier card
+js/callsim.js           call simulator: scripted agent-on-your-behalf calls
 js/app.js               controller: state, rendering, the three-state UI
-tests/matcher.tests.js  54 assertions, runs in node and in the browser
+js/home.js, js/site.js  tool panels that open in place; mobile menu
+img/                    hero image
+tests/matcher.tests.js  140 assertions, runs in the browser and in node
 tests/index.html        browser test runner
-tests/smoke_test.py     40 end-to-end assertions driven through real Chrome
+tests/smoke_test.py     end-to-end checks driven through real Chrome
 ai.md                   which AI tools were used and how
 WRITEUP.md              the one-page submission write-up
 ```
 
-No dependencies, no build step, no framework. ~3,700 lines including tests and
-comments.
+No dependencies, no build step, no framework.
 
 ---
 
@@ -240,27 +288,32 @@ comments.
 
 In rough order of how much each would matter to a real user:
 
-1. **Replace the corpus with the real one.** Mine the recurring questions from
-   Jany Jashoo, the relocation platform I run for Central Asian students in
-   Hungary (100+ users), and sit in the waiting room at Budapest's immigration
-   office for a day with consent to log phrases. The matcher is ready; the
-   corpus is the product and mine is 212 phrases written from experience, not
-   from data.
-2. **More explanation languages.** The architecture already carries two —
+1. **Replace the corpus with the real one.** Survey international students
+   about what they were asked at hospitals, banks and offices and could not
+   follow, and ask staff at those places which phrases they say most. The
+   matcher is ready; the corpus is the product. All 212 phrases were generated by
+   an AI assistant and I reviewed their content; they still need review by a
+   native Hungarian speaker, and none of them come from data.
+2. **Real phone calls on the user's behalf.** The call simulator shows the
+   design: scripted dialogue, an agent that says it is an AI, pauses for the
+   user's decisions, no identity or health numbers. A real version needs
+   telephony and Hungarian speech services, and starts with low-risk calls
+   (a table, a courier). A Telegram version is also planned.
+3. **More explanation languages.** The architecture already carries two —
    `js/i18n.js` holds the interface strings and each phrase card holds its
    explanation per language, with the Hungarian side untouched. Adding
    Ukrainian, Serbian, Vietnamese or Mongolian is a translation task, not a
    rewrite: those are the next largest groups at these counters.
-3. **On-device recognition.** The Web Speech API routes audio through the browser
+4. **On-device recognition.** The Web Speech API routes audio through the browser
    vendor. `whisper.cpp` compiled to WASM would make the privacy claim absolute
    rather than merely good, at the cost of a model download.
-4. **Learn from refusals.** Every unmatched phrase is a gap in the corpus. Log
+5. **Learn from refusals.** Every unmatched phrase is a gap in the corpus. Log
    them locally, let the user flag the useful ones, and grow the corpus from
    real counters rather than from my imagination.
-5. **Diarisation.** Right now the app cannot tell the clerk's voice from the
+6. **Diarisation.** Right now the app cannot tell the clerk's voice from the
    user's. Two-speaker separation would let it follow a whole appointment
    instead of one phrase at a time.
-6. **Offline Hungarian TTS.** System voices are inconsistent across devices, and
+7. **Offline Hungarian TTS.** System voices are inconsistent across devices, and
    the reply is useless if it is unintelligible to the clerk.
 
 ---

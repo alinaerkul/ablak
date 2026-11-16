@@ -604,13 +604,13 @@
 
   function setupMic() {
     var btn = $('practice-mic');
-    if (!Speech.Listener.isSupported()) { btn.hidden = true; return; }
+    if (!window.AblakRecognition.isSupported()) { btn.hidden = true; return; }
     btn.addEventListener('click', function () {
       /* The main listener and this one cannot share the microphone. */
       var main = $('mic-btn');
       if (main && main.classList.contains('is-listening')) main.click();
       if (listener && btn.classList.contains('is-listening')) { listener.stop(); return; }
-      listener = new Speech.Listener({
+      listener = window.AblakRecognition.create({
         lang: 'hu-HU',
         onFinal: function (text) {
           listener.stop();

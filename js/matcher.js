@@ -32,7 +32,7 @@
  *    ("kérem a ..." opens half the corpus). So each card also declares its
  *    content words, and we weight a hit by inverse document frequency: a
  *    keyword that appears in one card is strong evidence, one that appears
- *    in twelve is nearly none. We match on a 6-character stem prefix, which
+ *    in twelve is nearly none. We match on an 8-character stem prefix, which
  *    is a crude but effective stand-in for a Hungarian stemmer — enough to
  *    link "igazolás", "igazolást" and "igazolása" without collapsing
  *    "lakcím" into "lakcímkártya".
