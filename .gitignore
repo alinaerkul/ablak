@@ -1,0 +1,23 @@
+# Nothing here is built, so this file mostly guards against accidents.
+
+# Never commit an API key. The optional LLM lane stores keys in the
+# browser's localStorage on the user's own device, never in the repo.
+.env
+.env.*
+*.key
+secrets.json
+
+# Test artefacts
+ablak-screenshot.png
+*.png.tmp
+.pytest_cache/
+__pycache__/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local agent notes: not part of the published project
+CLAUDE.md

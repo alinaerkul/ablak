@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="How Ablak turns Hungarian spoken at a counter into what is asked, what to do and which document to hand over.">
+<title>How it works — Ablak</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232D4A35'/%3E%3Cg stroke='%23fff' stroke-width='2.5' fill='none'%3E%3Cpath d='M9 25V14a7 7 0 0114 0v11M16 8v17'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=Inter:wght@400;500;600&family=Manrope:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="index.html" aria-label="Ablak, home">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name">Ablak</span>
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <a href="how-it-works.html" aria-current="page">How it works</a>
+      <a href="privacy.html">Privacy and limits</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="header-actions">
+      <a class="gh-btn" href="https://github.com/alinaerkul/ablak" rel="noopener"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;stroke:none"><path d="M12 .5a11.5 11.5 0 00-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 015.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.4-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0012 .5z"/></svg><span>View on GitHub</span></a>
+      <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="page-hero">
+  <div class="container">
+    <span class="label">How it works</span>
+    <h1 style="margin-top:14px">A system you can inspect, not a black box.</h1>
+    <p>Ablak does not ask a language model what a clerk probably meant. It matches what was heard against a written, reviewable set of counter phrases, and it refuses when it is not sure.</p>
+  </div>
+</section>
+
+<section class="section" style="padding-top:24px">
+  <div class="container">
+    <div class="section-head"><h2>Three steps</h2></div>
+    <div class="steps">
+      <div class="card step"><span class="num">01</span><h3>Listen</h3><p>Capture Hungarian speech through the browser's speech recognition (<code>hu-HU</code>), or accept typed text. Typing works in any browser.</p></div>
+      <div class="card step"><span class="num">02</span><h3>Match</h3><p>Compare the recognised request with a structured knowledge base of what officials, bank clerks, doctors and shop staff actually say.</p></div>
+      <div class="card step"><span class="num">03</span><h3>Guide</h3><p>Return an actionable instruction: what is asked, what to do, which document to hand over, and a Hungarian reply. Or refuse when confidence is not enough.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="container"><div class="prose">
+    <h2>Why a knowledge base?</h2>
+    <p>Someone at a counter needs an instruction, not a translation: <em>which document do I take out of the folder?</em> A general model can phrase an answer fluently while being wrong about a document or a procedure, and a wrong instruction at an immigration counter can cost an appointment or a signature. So the answers live in a written knowledge base that a person can read and check.</p>
+    <h3>How a card is organised</h3>
+    <ul>
+      <li>The Hungarian phrase, plus other ways the same thing is really said (<strong>765 forms</strong> in total).</li>
+      <li>Keywords that identify the move, the counter it belongs to, and a risk level.</li>
+      <li>What it means, what to do, which document to hand over, and a Hungarian reply, written in both English and Russian.</li>
+    </ul>
+    <h3>How matching works</h3>
+    <p>Two signals are combined. Character 4-gram similarity survives Hungarian suffixes and recognition noise. IDF-weighted keyword stems stop boilerplate openings such as "Kérem" from dominating. Choosing the counter first narrows the search, which makes near-identical phrases from other places stop competing.</p>
+    <h3>Why the model must not invent documents</h3>
+    <p>An optional AI fallback exists for phrases outside the knowledge base. It is off by default, its answers are always labelled unverified, and it is never allowed to name a document.</p>
+  </div></div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="section-head">
+      <h2>Confidence and refusal</h2>
+      <p>The matcher has three outcomes, each with its own look and its own label. Refusing is a designed result, not an error.</p>
+    </div>
+    <div class="conf-grid">
+      <div class="conf-card high"><span class="badge is-confident">High confidence</span><h3>It answers</h3><p>Score of 0.52 or more and a clear gap to the next best phrase. Meaning, action, document and a Hungarian reply are shown.</p></div>
+      <div class="conf-card medium"><span class="badge is-uncertain">Medium confidence</span><h3>It asks you to check</h3><p>Score between 0.30 and 0.52, or two phrases score almost the same. It shows its best guess with alternatives and a caution.</p></div>
+      <div class="conf-card low"><span class="badge">Low confidence</span><h3>It refuses</h3><p>Below 0.30 it gives no guess. It offers a Hungarian sentence asking the clerk to repeat more slowly.</p></div>
+    </div>
+    <div class="prose">
+      <h3>A case we got wrong first</h3>
+      <p>During testing, the line <em>"Kérem a személyi igazolványát és a TAJ-kártyáját"</em> (your ID card and your TAJ card) was matched with confidence to the passport card, because "személyi igazolvány" was the strongest signal. The user would have been told to hand over a passport and missed half the request. The fix was a dedicated card for that combined request, and a test that now checks every phrase resolves to its own card.</p>
+      <p>Lowering the thresholds would raise how often it answers, and that is exactly the wrong trade here.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="section-head"><h2>Project statistics</h2><p>Only numbers that can be checked in the repository.</p></div>
+    <div class="stats">
+      <div class="stat"><b>212</b><span>Knowledge cards</span></div>
+      <div class="stat"><b>765</b><span>Phrase forms</span></div>
+      <div class="stat"><b>109</b><span>Ready-made phrases to say</span></div>
+      <div class="stat"><b>122</b><span>Automated checks, all passing</span></div>
+    </div>
+    <p class="hint">The checks run in the browser. They confirm every phrase and variant resolves to its own card, that out-of-domain phrases (weather, pizza, homework) are refused, and that the practice and call scripts cannot get stuck.</p>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="container"><div class="prose">
+    <h2>What is built and what is next</h2>
+    <ul class="roadmap">
+      <li><span>Live guidance with confidence and refusal</span><span class="badge is-confident">Working</span></li>
+      <li><span>Booking practice (five dialogues)</span><span class="badge is-confident">Working</span></li>
+      <li><span>Courier card</span><span class="badge is-confident">Working</span></li>
+      <li><span>Call simulator (scripted, no real call)</span><span class="badge badge-proto">Prototype</span></li>
+      <li><span>Native-speaker review of the Hungarian wording</span><span class="badge badge-low">In progress</span></li>
+      <li><span>Real booking calls</span><span class="badge badge-low">Planned</span></li>
+      <li><span>Telegram integration</span><span class="badge badge-low">Planned</span></li>
+    </ul>
+    <div class="cta-band">
+      <h3>See it work</h3>
+      <a class="btn btn-primary" href="index.html#try">Try it now</a>
+    </div>
+  </div></div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="index.html" aria-label="Ablak, home">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">Ablak</span>
+        </a>
+        <p>A counter-side coach for Hungary</p>
+      </div>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="how-it-works.html">How it works</a>
+        <a href="privacy.html">Privacy and limits</a>
+        <a href="about.html">About</a>
+        <a href="https://github.com/alinaerkul/ablak" rel="noopener"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;stroke:none"><path d="M12 .5a11.5 11.5 0 00-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 015.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.4-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0012 .5z"/></svg><span>View on GitHub</span></a>
+        <a href="about.html#contact"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span>Contact</span></a>
+      </nav>
+    </div>
+    <p class="footer-note">Built by Alina Erkulova for the Hiya Voice AI Challenge · © 2026 Alina Erkulova</p>
+  </div>
+</footer>
+
+<script src="js/site.js"></script>
+</body>
+</html>

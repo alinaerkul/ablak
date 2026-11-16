@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Ablak is a counter-side coach for Hungary: it tells you what is being asked, what to do, and which document to hand over.">
+<title>Ablak — a counter-side coach for Hungary</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232D4A35'/%3E%3Cg stroke='%23fff' stroke-width='2.5' fill='none'%3E%3Cpath d='M9 25V14a7 7 0 0114 0v11M16 8v17'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=Inter:wght@400;500;600&family=Manrope:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="index.html" aria-label="Ablak, home">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name">Ablak</span>
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <a href="how-it-works.html" data-i18n="nav.how"></a>
+      <a href="privacy.html" data-i18n="nav.privacy"></a>
+      <a href="about.html" data-i18n="nav.about"></a>
+    </nav>
+    <div class="header-actions">
+      <a class="gh-btn" href="https://github.com/alinaerkul/ablak" rel="noopener"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;stroke:none"><path d="M12 .5a11.5 11.5 0 00-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 015.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.4-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0012 .5z"/></svg><span data-i18n="nav.github"></span></a>
+      <!-- The app explains in the user's language; Hungarian is always the
+           language it listens to. This toggle changes only the former. -->
+      <button id="lang-toggle" class="lang-btn" type="button" data-i18n-title="lang.switchTo">
+        <span id="lang-current">EN</span>
+      </button>
+      <button id="settings-toggle" class="icon-btn" type="button" data-i18n-title="app.settings" aria-label="Settings">⚙</button>
+      <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-i18n-title="nav.menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- Support warning, shown only when the browser cannot do speech input -->
+<div class="container banner-wrap">
+  <div id="unsupported" class="banner banner-warn" hidden>
+    <strong data-i18n="unsupported.strong"></strong>
+    <span data-i18n="unsupported.text"></span>
+  </div>
+</div>
+
+<main>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <h1 data-i18n="hero.title"></h1>
+        <p class="hero-sub" data-i18n="hero.text"></p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#try"><svg class="i" style="width:22px;height:22px" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z"/></svg><span data-i18n="hero.cta"></span></a>
+          <!-- Switch this to the demo video once it is published. -->
+          <a class="link-play" href="how-it-works.html"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l3 3v15H6z"/><path d="M9 11h6M9 15h6"/></svg><span data-i18n="hero.more"></span></a>
+        </div>
+      </div>
+      <div class="hero-art">
+        <img src="img/hero-parliament.jpg" alt="The Hungarian Parliament building on the Danube" width="1400" height="933" fetchpriority="high">
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WORKSPACE: where / speak / result ============ -->
+  <div class="container">
+    <div class="workspace" id="try">
+
+      <div class="ws-col">
+        <h2 class="ws-title mono" data-i18n="ws.where"></h2>
+        <div class="scenario-row" id="scenario-row" role="tablist">
+          <button class="chip" data-scenario="immigration" role="tab" type="button">
+            <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.2c2.7.2 5 2.4 5 5.8"/></svg>
+            <span class="chip-title" data-i18n="loc.immigration"></span>
+          </button>
+          <button class="chip" data-scenario="bank" role="tab" type="button">
+            <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10l9-6 9 6"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></svg>
+            <span class="chip-title" data-i18n="loc.bank"></span>
+          </button>
+          <button class="chip" data-scenario="clinic" role="tab" type="button">
+            <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
+            <span class="chip-title" data-i18n="loc.clinic"></span>
+          </button>
+          <button class="chip" data-scenario="supermarket" role="tab" type="button">
+            <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2.5l2 11h10l2-8H7"/><circle cx="9" cy="19" r="1.3"/><circle cx="17" cy="19" r="1.3"/></svg>
+            <span class="chip-title" data-i18n="loc.supermarket"></span>
+          </button>
+        </div>
+        <div class="scenario-any">
+          <button class="chip chip-any chip-active" data-scenario="all" role="tab" type="button" data-i18n="scenario.all"></button>
+        </div>
+      </div>
+
+      <div class="ws-col ws-speak">
+        <h2 class="ws-title" data-i18n="ws.speak"></h2>
+        <div class="mic-wrap">
+          <button id="mic-btn" class="mic-btn" type="button" aria-live="polite" data-i18n-title="mic.start"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></button>
+          <span class="mic-label" id="mic-label"></span>
+        </div>
+        <div class="status-line">
+          <span id="status-dot" class="dot"></span>
+          <span id="status-text"></span>
+        </div>
+        <div id="mic-alert" class="alert alert-error" role="alert" hidden>
+          <span id="mic-alert-text" style="flex:1"></span>
+          <button id="mic-retry" type="button" class="btn btn-secondary" data-i18n="err.retry"></button>
+        </div>
+        <div class="transcript-box">
+          <span class="transcript-label" data-i18n="transcript.label"></span>
+          <p id="transcript" class="transcript">—</p>
+        </div>
+        <div class="type-row">
+          <input id="text-input" type="text" autocomplete="off" lang="hu" data-i18n-ph="ws.typeph" aria-label="Type what you heard">
+          <button id="text-submit" class="btn btn-primary" type="button" data-i18n="text.submit"></button>
+        </div>
+        <div class="examples">
+          <span class="block-label" data-i18n="text.examples"></span>
+          <div id="example-list" class="alt-list"></div>
+        </div>
+      </div>
+
+      <div class="ws-col ws-result">
+        <h2 class="ws-title mono" data-i18n="ws.result"></h2>
+        <div id="result-empty" class="result-empty">
+          <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></svg>
+          <p data-i18n="ws.empty"></p>
+        </div>
+        <section id="result" class="result" hidden>
+          <div class="result-head">
+            <span id="result-badge" class="badge">—</span>
+            <span id="result-score" class="score"></span>
+          </div>
+          <div class="result-body">
+            <div class="result-block">
+              <span class="block-label" data-i18n="guide.meaning"></span>
+              <p id="result-meaning" class="block-main"></p>
+            </div>
+            <div class="result-block">
+              <span class="block-label" data-i18n="guide.action"></span>
+              <p id="result-action" class="block-main"></p>
+            </div>
+            <div id="result-doc-wrap" class="doc-callout" hidden>
+              <span class="doc-icon" aria-hidden="true">📄</span>
+              <div>
+                <span class="block-label" data-i18n="guide.doc"></span>
+                <p id="result-doc" class="doc-name"></p>
+              </div>
+            </div>
+            <div id="result-risk" class="risk-callout" hidden>
+              <span aria-hidden="true">⚠</span>
+              <p data-i18n="result.risk"></p>
+            </div>
+            <div id="reply-wrap" class="reply-card" hidden>
+              <span class="block-label" data-i18n="guide.say"></span>
+              <p id="reply-hu" class="reply-hu" lang="hu"></p>
+              <p id="reply-ru" class="reply-ru"></p>
+              <button id="speak-reply" class="btn btn-primary" type="button" data-i18n="result.speak"></button>
+            </div>
+          </div>
+          <div id="alternatives" class="alternatives" hidden>
+            <span class="block-label" data-i18n="result.alternatives"></span>
+            <div id="alternatives-list" class="alt-list"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <details class="recent">
+      <summary data-i18n="history.title"></summary>
+      <ol id="history" class="history">
+        <li class="history-empty" data-i18n="history.empty"></li>
+      </ol>
+      <button id="clear-history" class="btn btn-ghost btn-small" type="button" data-i18n="history.clear"></button>
+    </details>
+  </div>
+
+  <!-- ============ KEY FEATURES ============ -->
+  <section class="section">
+    <div class="container features">
+      <div class="features-intro">
+        <span class="label" data-i18n="feat.label"></span>
+        <h2 data-i18n="feat.title"></h2>
+      </div>
+      <div class="feat"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg><h3 data-i18n="feat.1.t"></h3><p data-i18n="feat.1.d"></p></div>
+      <div class="feat"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></svg><h3 data-i18n="feat.2.t"></h3><p data-i18n="feat.2.d"></p></div>
+      <div class="feat"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h8"/></svg><h3 data-i18n="feat.3.t"></h3><p data-i18n="feat.3.d"></p></div>
+    </div>
+  </section>
+
+  <!-- ============ PRACTICE BAND ============ -->
+  <section class="container">
+    <div class="band">
+      <div>
+        <h2 data-i18n="prac.title"></h2>
+        <p data-i18n="prac.text"></p>
+        <button type="button" class="btn btn-primary" data-open="practice"><span data-i18n="prac.cta"></span></button>
+      </div>
+      <div class="pill-list">
+        <span class="pill"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><span data-i18n="prac.p1"></span></span>
+        <span class="pill"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><span data-i18n="prac.p2"></span></span>
+        <span class="pill"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><span data-i18n="prac.p3"></span></span>
+        <span class="pill"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><span data-i18n="prac.p4"></span></span>
+        <span class="pill"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><span data-i18n="prac.p5"></span></span>
+      </div>
+      <div class="band-art"><svg viewBox="0 0 220 270" role="img" aria-label="Phone showing a simulated call"><g transform="rotate(8 110 135)"><rect x="52" y="14" width="124" height="242" rx="22" fill="#1E3425"/><rect x="60" y="26" width="108" height="218" rx="14" fill="#2D4A35"/><circle cx="114" cy="92" r="24" fill="#B9CFBE"/><g transform="translate(102 80)" stroke="#1E3425" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2h4l2 5-2.5 1.5a10 10 0 004.5 4.5L12 10.5l5 2v4a2 2 0 01-2 2A14 14 0 012 4a2 2 0 010 0z"/></g><text x="114" y="142" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" fill="#fff">Simulating…</text><g fill="#B9CFBE"><rect x="80" y="170" width="4" height="22" rx="2"/><rect x="90" y="162" width="4" height="38" rx="2"/><rect x="100" y="156" width="4" height="50" rx="2"/><rect x="110" y="166" width="4" height="30" rx="2"/><rect x="120" y="158" width="4" height="46" rx="2"/><rect x="130" y="168" width="4" height="26" rx="2"/><rect x="140" y="174" width="4" height="14" rx="2"/></g></g></svg></div>
+    </div>
+
+    <div id="practice-panel" class="tool-panel" hidden>
+      <div class="panel">
+        <div class="tool-head">
+          <h2 data-i18n="prac.title"></h2>
+          <button type="button" class="btn btn-ghost btn-small" data-close="practice" data-i18n="panel.close"></button>
+        </div>
+        <p class="hint" data-i18n="sec.practice.sub"></p>
+        <div id="practice-picker" class="scn-grid"></div>
+        <div id="practice-session" style="margin-top:20px" hidden>
+          <div class="pr-head" style="margin-top:0">
+            <h3 id="practice-name"></h3>
+            <span class="pr-actions">
+              <button id="practice-restart" type="button" class="btn btn-ghost btn-small" data-i18n="practice.restart"></button>
+              <button id="practice-exit" type="button" class="btn btn-ghost btn-small" data-i18n="practice.exit"></button>
+            </span>
+          </div>
+          <p id="practice-intro" class="hint"></p>
+          <div id="practice-log" class="pr-log" aria-live="polite"></div>
+          <div id="practice-options" class="say-grid"></div>
+          <label class="pr-hard">
+            <input id="practice-hard" type="checkbox">
+            <span data-i18n="practice.hard"></span>
+          </label>
+          <div id="practice-input-row" class="text-input-row">
+            <input id="practice-input" type="text" autocomplete="off" lang="hu" data-i18n-ph="practice.placeholder">
+            <button id="practice-send" type="button" class="btn btn-primary" data-i18n="practice.send"></button>
+            <button id="practice-mic" type="button" class="btn btn-ghost" data-i18n-title="practice.mic">🎙</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ THREE TOOLS ============ -->
+    <div class="tool-cards">
+      <div class="tool-card" data-card="phrases">
+        <svg class="i" style="color:var(--clay)" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h8"/></svg>
+        <h3 data-i18n="card.phrases.t"></h3>
+        <p data-i18n="card.phrases.d"></p>
+        <button type="button" class="btn btn-small" data-open="phrases"><span data-i18n="card.phrases.cta"></span> →</button>
+        <svg class="tool-art" viewBox="0 0 120 96" aria-hidden="true"><rect x="10" y="14" width="96" height="46" rx="12" fill="#E3ECE2"/><path d="M30 60l-4 16 18-16z" fill="#E3ECE2"/><text x="22" y="42" font-family="Manrope,sans-serif" font-weight="700" font-size="11" fill="#1E3425">Elnézést…</text></svg>
+      </div>
+      <div class="tool-card" data-card="courier">
+        <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6-7-11a7 7 0 0114 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+        <h3 data-i18n="card.courier.t"></h3>
+        <p data-i18n="card.courier.d"></p>
+        <button type="button" class="btn btn-small" data-open="courier"><span data-i18n="card.courier.cta"></span> →</button>
+        <svg class="tool-art" viewBox="0 0 120 96" aria-hidden="true"><g transform="rotate(-6 60 48)"><rect x="8" y="10" width="104" height="72" rx="8" fill="#F3E6D3" stroke="#DCC9AC"/><path d="M26 30c0-5 4-9 9-9s9 4 9 9c0 6-9 15-9 15s-9-9-9-15z" fill="#C2653F"/><circle cx="35" cy="30" r="3.2" fill="#F3E6D3"/><text x="52" y="30" font-family="Manrope,sans-serif" font-weight="700" font-size="9" fill="#1E3425">Fő utca 12.</text><text x="20" y="62" font-family="Inter,sans-serif" font-size="9" fill="#4A5951">Kérem, itt van</text><text x="20" y="74" font-family="Inter,sans-serif" font-size="9" fill="#4A5951">a címem.</text></g></svg>
+      </div>
+      <div class="tool-card" data-card="sim">
+        <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg>
+        <h3 data-i18n="card.sim.t"></h3>
+        <p data-i18n="card.sim.d"></p>
+        <button type="button" class="btn btn-small" data-open="sim"><span data-i18n="card.sim.cta"></span> →</button>
+        <svg class="tool-art" viewBox="0 0 120 96" aria-hidden="true"><g fill="#B9CFBE"><rect x="6" y="40" width="4" height="16" rx="2"/><rect x="16" y="30" width="4" height="36" rx="2"/><rect x="26" y="22" width="4" height="52" rx="2"/><rect x="36" y="34" width="4" height="28" rx="2"/><rect x="46" y="26" width="4" height="44" rx="2"/><rect x="56" y="38" width="4" height="20" rx="2"/></g><circle cx="94" cy="44" r="22" fill="#2D4A35"/><text x="94" y="50" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="16" fill="#fff">AI</text></svg>
+      </div>
+    </div>
+
+    <!-- ============ TOOL PANELS (open in place, one at a time) ============ -->
+    <div id="phrases-panel" class="tool-panel" hidden>
+      <div class="panel">
+        <div class="tool-head">
+          <h2 data-i18n="sec.phrases.title"></h2>
+          <button type="button" class="btn btn-ghost btn-small" data-close="phrases" data-i18n="panel.close"></button>
+        </div>
+        <p class="hint" data-i18n="sec.phrases.sub" style="margin-bottom:16px"></p>
+        <div id="essentials" class="say-grid essentials"></div>
+        <details class="more-phrases">
+          <summary data-i18n="phrases.more"></summary>
+          <p class="hint" data-i18n="say.hint" style="margin:8px 0 4px"></p>
+          <div id="say-list" class="say-list"></div>
+        </details>
+      </div>
+    </div>
+
+    <div id="courier-panel" class="tool-panel" hidden>
+      <div class="panel">
+        <div class="tool-head">
+          <h2 data-i18n="sec.courier.title"></h2>
+          <button type="button" class="btn btn-ghost btn-small" data-close="courier" data-i18n="panel.close"></button>
+        </div>
+        <p class="hint" data-i18n="courier.hint"></p>
+        <div class="courier-grid">
+          <div>
+            <div class="courier-fields">
+              <label class="wide"><span data-i18n="courier.name"></span><input id="courier-name" type="text" autocomplete="off"></label>
+              <label class="wide"><span data-i18n="courier.streetLabel"></span><input id="courier-street" type="text" autocomplete="off" data-i18n-ph="courier.street"></label>
+              <label><span data-i18n="courier.floor"></span><input id="courier-floor" type="text" autocomplete="off" inputmode="numeric"></label>
+              <label><span data-i18n="courier.door"></span><input id="courier-door" type="text" autocomplete="off"></label>
+              <label><span data-i18n="courier.phone"></span><input id="courier-phone" type="text" autocomplete="off" inputmode="tel"></label>
+              <label><span data-i18n="courier.code"></span><input id="courier-code" type="text" autocomplete="off"></label>
+            </div>
+          </div>
+          <div>
+            <div id="courier-empty" class="card courier-empty" data-i18n="courier.empty"></div>
+            <div id="courier-card" class="courier-card" hidden>
+              <span class="block-label" id="courier-name-label"></span>
+              <p class="courier-addr" id="courier-addr"></p>
+              <p class="courier-sub" id="courier-sub"></p>
+              <p class="courier-meta" id="courier-phone-out"></p>
+              <p id="courier-hu" class="courier-hu" lang="hu"></p>
+              <div class="courier-actions">
+                <button id="courier-copy" type="button" class="btn btn-secondary" data-i18n="courier.copy"></button>
+                <button id="courier-speak" type="button" class="btn btn-primary" data-i18n="courier.speak"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="courier-phrases">
+          <span class="block-label" data-i18n="courier.phrases"></span>
+          <div id="courier-phrases" class="say-grid" style="margin-top:10px"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="sim-panel" class="tool-panel" hidden>
+      <div class="panel">
+        <div class="tool-head">
+          <h2 id="sim-title"></h2>
+          <button type="button" class="btn btn-ghost btn-small" data-close="sim" data-i18n="panel.close"></button>
+        </div>
+        <p class="hint" id="sim-hint" style="margin-bottom:12px"></p>
+        <div class="alert alert-warn sim-top" role="note">
+          <span class="badge badge-proto" id="sim-badge"></span>
+          <span id="sim-badge-text"></span>
+        </div>
+        <div id="sim-picker" class="scn-grid"></div>
+        <div id="sim-form" style="margin-top:20px" hidden>
+          <p class="hint" id="sim-intro"></p>
+          <div id="sim-fields" class="sim-fields"></div>
+          <label class="pr-hard">
+            <input id="sim-mute" type="checkbox">
+            <span id="sim-mute-label"></span>
+          </label>
+          <div class="sim-controls">
+            <button id="sim-start" type="button" class="btn btn-primary"></button>
+            <button id="sim-end" type="button" class="btn btn-ghost" hidden></button>
+            <span class="sim-status"><span id="sim-dot" class="dot"></span><span id="sim-status"></span></span>
+          </div>
+          <div id="sim-log" class="pr-log" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="index.html" aria-label="Ablak, home">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">Ablak</span>
+        </a>
+        <p data-i18n="footer.tag"></p>
+      </div>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="how-it-works.html" data-i18n="nav.how"></a>
+        <a href="privacy.html" data-i18n="nav.privacy"></a>
+        <a href="about.html" data-i18n="nav.about"></a>
+        <a href="https://github.com/alinaerkul/ablak" rel="noopener"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;stroke:none"><path d="M12 .5a11.5 11.5 0 00-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 015.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.4-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0012 .5z"/></svg><span data-i18n="nav.github"></span></a>
+        <a href="about.html#contact"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span data-i18n="footer.contact"></span></a>
+      </nav>
+    </div>
+    <p class="footer-note"><span data-i18n="footer.text"></span> · <span data-i18n="footer.copy"></span></p>
+  </div>
+</footer>
+
+<!-- ============ SETTINGS DRAWER ============ -->
+<div id="settings" class="drawer" hidden>
+  <div class="drawer-inner">
+    <div class="drawer-head">
+      <h2 data-i18n="settings.title"></h2>
+      <button id="settings-close" class="icon-btn" data-i18n-title="settings.close">✕</button>
+    </div>
+
+    <div class="setting">
+      <label class="setting-label" for="rate-range" data-i18n="settings.rate"></label>
+      <input id="rate-range" type="range" min="0.6" max="1.1" step="0.02" value="0.92">
+      <span id="rate-value" class="setting-value">0.92×</span>
+    </div>
+
+    <div class="setting">
+      <label class="setting-label">
+        <input id="autospeak" type="checkbox">
+        <span data-i18n="settings.autospeak"></span>
+      </label>
+      <p class="hint" data-i18n="settings.autospeakHint"></p>
+    </div>
+
+    <hr>
+
+    <h3 class="setting-heading" data-i18n="settings.llmHeading"></h3>
+    <p class="hint" data-i18n="settings.llmHint"></p>
+    <label class="setting-label" for="llm-provider" data-i18n="settings.provider"></label>
+    <select id="llm-provider">
+      <option value="" data-i18n="settings.providerOff"></option>
+      <option value="groq">Groq</option>
+      <option value="gemini">Google AI Studio (Gemini)</option>
+    </select>
+    <label class="setting-label" for="llm-key" data-i18n="settings.apiKey"></label>
+    <input id="llm-key" type="password" placeholder="gsk_… / AIza…" autocomplete="off">
+    <button id="llm-save" class="btn btn-primary btn-block" data-i18n="settings.save"></button>
+    <p id="llm-status" class="hint"></p>
+
+    <hr>
+
+    <div class="setting">
+      <h3 class="setting-heading" data-i18n="settings.voices"></h3>
+      <p id="voice-report" class="hint"></p>
+      <button id="voice-test" class="btn btn-ghost btn-block" data-i18n="settings.voiceTest"></button>
+    </div>
+
+    <hr>
+    <p class="hint">
+      <span data-i18n="settings.corpus"></span>
+      <span id="corpus-size">—</span>
+      <span data-i18n="settings.privacy"></span>
+    </p>
+  </div>
+</div>
+
+<script src="js/i18n.js"></script>
+<script src="js/phrases.js"></script>
+<script src="js/matcher.js"></script>
+<script src="js/speech.js"></script>
+<script src="js/llm.js"></script>
+<script src="js/practice.js"></script>
+<script src="js/courier.js"></script>
+<script src="js/callsim.js"></script>
+<script src="js/app.js"></script>
+<script src="js/home.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>

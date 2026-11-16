@@ -1,0 +1,101 @@
+# Demo video script — 2:30
+
+Optional per the brief, but worth recording: it is insurance if anything
+misbehaves when the code is run, and it is the fastest way to show the refusal
+behaviour, which is the point of the project.
+
+**Setup before recording**
+- `python3 -m http.server 8000`, open `http://localhost:8000` in Chrome
+- Phone-width window (narrow the browser, or DevTools device toolbar)
+- Headphones on, so the app's Hungarian speech does not feed back into the mic
+- Settings → *Проверить венгерский голос* once beforehand, to confirm a
+  Hungarian voice exists
+- Clear the history before you start
+- Leave the interface in English for the recording; flip to RU once, briefly,
+  when you mention who it is really for
+
+---
+
+### 0:00–0:25 — The problem, in one scene
+
+> "Kérem a lakcímkártyáját." I did not know what that meant, and the clerk had
+> already said it twice. I had the right document in my folder — I handed over
+> my passport.
+>
+> I moved to Budapest from Kyrgyzstan two years ago. I run a platform called
+> Jany Jashoo for Central Asian students arriving in Hungary, and this is the
+> single most common thing people tell me about: not that the language is hard,
+> but that it is hard *at a counter*, with twenty seconds to answer.
+
+*On screen: the app's home view, idle.*
+
+### 0:25–0:50 — Why voice
+
+> Both hands are holding documents. My eyes are on the clerk. And I cannot type
+> a word I could not make out — Hungarian glues suffixes on, so *lakcímkártya*
+> arrives as *lakcímkártyáját*. A translation app needs me to spell something I
+> could not hear. A microphone does not.
+
+### 0:50–1:30 — The core loop
+
+Press **Слушать**. Have someone say, or play a recording of:
+
+> *"Jó napot kívánok. Kérem a lakcímkártyáját."*
+
+*Point at each part of the result as it appears:*
+
+> It does not translate the words. It tells me what they are asking, what to do,
+> and — this is the part that matters — **which document to take out**. Then it
+> gives me a Hungarian sentence to say back.
+
+Press **🔊 Произнести по-венгерски**. Let it speak.
+
+> Understanding is only half of standing at a counter.
+
+### 1:30–2:00 — The thing I actually want you to see
+
+Say, or type:
+
+> *"A kutyám megette a házi feladatomat."*
+
+*Let the "Не понял" state render.*
+
+> It refuses. That is deliberate. A confidently wrong answer at an immigration
+> counter costs you the appointment, or a signature you cannot take back. So the
+> core is not a model call — it is a curated corpus of 212 phrases officials
+> actually say, matched by character n-grams and IDF-weighted keywords, with a
+> calibrated score. Below the threshold it says it does not know and offers to
+> ask the clerk to repeat more slowly. Five of my 54 tests assert that it
+> refuses.
+
+Then run `Hiánypótlásra fogjuk felszólítani.`
+
+> And where the stakes are highest — a missing document, a signature, a
+> medication — it raises a warning instead of rushing you.
+
+### 2:00–2:20 — How it runs
+
+> No API key, no account, no backend. `python3 -m http.server` and Chrome.
+> Nothing leaves the device, which matters when the audio is someone's
+> immigration interview. There is an optional model fallback for phrases outside
+> the corpus — off by default, labelled unverified, and never allowed to name a
+> document.
+
+*Briefly show `node tests/matcher.tests.js` → 54 passed.*
+
+### 2:20–2:30 — Close
+
+> The matcher is finished. The corpus is the product, and mine is 212 phrases
+> written from memory. With more time I would replace it with real ones — from
+> my platform's users, and from a day in the waiting room — and add Ukrainian
+> and Vietnamese, which cost nothing but new explanations.
+
+---
+
+**Recording tips**
+- Record in one take if you can; a cut right after a refusal looks like an edit
+  that hid a failure.
+- If the Hungarian speech recognition mishears, leave it in and say so. It
+  demonstrates the confidence scoring doing its job.
+- Keep your face out of frame if that is easier — screen plus voice is fine, and
+  this is a voice project.

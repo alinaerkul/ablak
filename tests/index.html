@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ablak — matcher tests</title>
+<style>
+  body { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+         background: #10181f; color: #dfe6ee; margin: 0; padding: 24px; line-height: 1.55; }
+  h1 { font-size: 1.1rem; margin: 0 0 4px; }
+  .sub { color: #7f90a1; font-size: .82rem; margin: 0 0 20px; }
+  .summary { padding: 12px 16px; border-radius: 8px; margin-bottom: 18px; font-weight: 700; }
+  .summary.ok   { background: #16301f; color: #5cc98b; border: 1px solid #2c5c3f; }
+  .summary.bad  { background: #351a16; color: #ef7a67; border: 1px solid #6a3328; }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { padding: 6px 10px; border-left: 3px solid #2c3a47; margin-bottom: 3px;
+       font-size: .8rem; background: #16202a; }
+  li.pass { border-left-color: #5cc98b; }
+  li.fail { border-left-color: #ef7a67; background: #241a18; }
+  .tag { display: inline-block; width: 46px; font-weight: 700; }
+  li.pass .tag { color: #5cc98b; }
+  li.fail .tag { color: #ef7a67; }
+  .detail { display: block; color: #e0a955; margin-left: 46px; }
+  .filters { margin-bottom: 14px; }
+  button { font-family: inherit; font-size: .78rem; background: #22303c; color: #dfe6ee;
+           border: 1px solid #2c3a47; border-radius: 6px; padding: 7px 12px; cursor: pointer; }
+  button:hover { border-color: #4d9fd1; color: #4d9fd1; }
+</style>
+</head>
+<body>
+
+<h1>Ablak — matcher test suite</h1>
+<p class="sub">
+  Same assertions as <code>node tests/matcher.tests.js</code>.
+  No framework, no build step.
+</p>
+
+<div class="filters">
+  <button id="toggle">Show passing tests</button>
+</div>
+
+<div id="summary" class="summary">Running…</div>
+<ul id="list"></ul>
+
+<script src="../js/phrases.js"></script>
+<script src="../js/matcher.js"></script>
+<script src="../js/practice.js"></script>
+<script src="../js/courier.js"></script>
+<script src="../js/callsim.js"></script>
+<script src="matcher.tests.js"></script>
+<script>
+  var outcome = window.AblakTests.run(false);
+  var summary = document.getElementById('summary');
+  var list = document.getElementById('list');
+  var showPassing = false;
+
+  summary.className = 'summary ' + (outcome.failed === 0 ? 'ok' : 'bad');
+  summary.textContent = outcome.passed + ' passed · ' + outcome.failed +
+                        ' failed · ' + outcome.results.length + ' total';
+
+  function render() {
+    list.innerHTML = '';
+    outcome.results
+      .filter(function (r) { return showPassing || !r.pass; })
+      .forEach(function (r) {
+        var li = document.createElement('li');
+        li.className = r.pass ? 'pass' : 'fail';
+        var tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.textContent = r.pass ? 'PASS' : 'FAIL';
+        li.appendChild(tag);
+        li.appendChild(document.createTextNode(r.name));
+        if (r.detail) {
+          var d = document.createElement('span');
+          d.className = 'detail';
+          d.textContent = r.detail;
+          li.appendChild(d);
+        }
+        list.appendChild(li);
+      });
+    if (!list.children.length) {
+      var li = document.createElement('li');
+      li.className = 'pass';
+      li.textContent = 'No failures.';
+      list.appendChild(li);
+    }
+  }
+
+  document.getElementById('toggle').addEventListener('click', function () {
+    showPassing = !showPassing;
+    this.textContent = showPassing ? 'Show failures only' : 'Show passing tests';
+    render();
+  });
+
+  render();
+</script>
+</body>
+</html>
