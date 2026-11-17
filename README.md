@@ -180,9 +180,13 @@ it is ever shown to a user.
 
 ### Why it refuses
 
-**A confidently wrong answer at an immigration counter is worse than no answer.**
-Hand over the wrong document and you lose the appointment. Sign the wrong form
-and you may have agreed to something you cannot undo.
+**When it is not sure, it says so instead of guessing.**
+Many clerks see that you do not speak Hungarian and try to help, so a wrong answer
+is rarely the end of the visit. But a confident wrong answer gets in the way of
+that help: you hand over the wrong document or nod to something you
+misunderstood, the clerk thinks you understood, and you lose time or agree to
+something that is hard to undo. "I am not sure" tells you to ask instead, and the
+app gives you the phrases to ask with.
 
 An LLM produces fluent output for every input, including inputs it misheard, and
 cannot tell you which ones it got right. The matcher can: it returns a calibrated

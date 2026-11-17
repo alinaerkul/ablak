@@ -31,12 +31,17 @@ failed any of them:
 
 ## The rule everything else follows
 
-> **A confidently wrong answer at a counter is worse than no answer.**
+> **When Ablak is not sure, it says so instead of guessing.**
 
-Hand over the wrong document and you lose the appointment. Agree to something you
-misunderstood and you may not be able to undo it. So whenever a decision traded
-coverage against correctness, I chose correctness, and I made the uncertainty
-visible to the user instead of hiding it.
+A wrong answer is rarely the end of the visit. Many clerks see that you do not
+speak Hungarian and try to help anyway: they slow down, point, or switch to
+English. But a confident wrong answer gets in the way of that help. If you hand
+over the wrong document or nod to something you misunderstood, the clerk thinks
+you understood, and you lose time, come back another day, or agree to something
+that is hard to undo. "I am not sure" does the opposite: it tells you to ask, and
+Ablak gives you the phrases to ask with ("Please speak more slowly", "Could you
+write it down?"). So whenever a decision traded coverage against correctness, I
+chose correctness, and I made the uncertainty visible instead of hiding it.
 
 Two practical rules come next:
 
