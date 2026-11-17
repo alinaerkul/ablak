@@ -1,8 +1,6 @@
 # ai.md — which AI tools I used, and how
 
-The brief says vibe-coding is expected and that you grade the result and my
-understanding of it. So this is a straight account of who did what, written so
-that nothing here surprises either of us in the review.
+Here is the breakdown of AI usage in this project.
 
 ---
 
@@ -12,7 +10,7 @@ that nothing here surprises either of us in the review.
 |---|---|
 | **Claude (Anthropic), used through Claude Code in agentic coding sessions; called "the assistant" below.** The first version used Claude Opus 5; the later additions (more phrases, practice mode, courier card, call simulator, site redesign, write-up) used Claude Sonnet 5.5. | Nearly all of the implementation: the matcher, the speech wrappers, the UI, the test suites, the practice dialogues, the courier card, the call simulator, the site design, and the first drafts of these documents. |
 | **Web search (run by the assistant)** | Checking which speech and LLM APIs currently have a free tier with no credit card, so the submission would run on your machine without a key of mine. |
-| **Google Chrome + Playwright** | Driving the real page in a real browser for the end-to-end suite. Not an AI tool, but it is what caught the bugs the model did not. |
+| **Google Chrome + Playwright** | Running the automated end-to-end suite (51 checks) against the real page in Chrome. A test tool, not an AI tool. Most of the problems that mattered in practice were found by me using the site and telling the assistant how it should work (see below). |
 
 No other code generation tool was used. There is no framework, no dependency and
 no build step in the repository, so nothing here is scaffolded from a template.
@@ -60,10 +58,13 @@ against the test suite.
 This is the part I think is worth your attention, because it is the difference
 between generated code and code someone stands behind.
 
-To be exact about who did what: I did not find these bugs myself. The AI
-assistant wrote the code, its automated tests and a real browser run found the
-problems, and the assistant fixed them. My part was to direct the work, to insist
-that the checks be real rather than assumed, and to review what came back.
+To be exact about who did what: the assistant wrote the code and its automated
+tests. The eight code-level bugs below (1 to 8) were found by those tests, by the
+browser console or by reviewing screenshots of the running app, and the assistant
+fixed them; I did not find them myself. The user-visible problems listed after
+them (9 to 12) were found by my own testing as a user. My part was to direct the
+work, to test the site and tell the assistant how I wanted it to behave, and to
+review what came back.
 
 **1. A stem collision that would have handed over the wrong document.**
 The matcher stemmed keywords to six characters. In Hungarian, `lakcím` (address)
@@ -121,11 +122,33 @@ An unescaped apostrophe in a new string stopped the whole script from loading, s
 the app did not start. The unit tests did not load that file; the browser console
 did show it, and a check in the real page confirmed the fix.
 
-Six of these were caught by tests the assistant wrote or by a real browser
-driving the page, and two by reviewing screenshots of the running app. I think
-that is the honest argument for how to use these tools: they write more code than
-I could in three days, so the verification has to be real, and a person's job is
-to direct the work and to check that it is.
+**Problems found by my own testing as a user**
+
+**9. Hungarian speech was not recognised well in Chrome.** When I tried the
+microphone at my university, Chrome's recognition did not correctly pick up a
+simple Hungarian question. This led to an optional Whisper microphone engine
+(opt-in, with my own key), so the two can be compared.
+
+**10. "I want to see a dentist" was answered with the doctor phrase.** The reply
+box matched on the words they had in common and silently dropped the one that
+mattered. I reported it, and the assistant changed the matching so that a phrase
+must cover most of what was said, and added dentist phrases.
+
+**11. Translation failed with an `http-404` error.** The cause was a model that
+the provider had retired. I reported the error from the screen; the assistant made
+the app choose an available model automatically and show the provider's own
+message.
+
+**12. The documentation overstated things.** An anecdote in the first drafts was
+not my real story, and some claims about where the phrases came from and what the
+platform I run provides were not accurate. I noticed this when I read the texts,
+and they were corrected (see "How the work was actually split").
+
+The first eight were found by tests and by reviewing the running app; the last
+four by me using the site. I think that is the honest argument for how to use
+these tools: they write more code than I could in three days, so the verification
+has to be real, and a person's job is to direct the work, to test it as a user
+and to check that what was written is true.
 
 ---
 

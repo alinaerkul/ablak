@@ -312,7 +312,7 @@
       if (useLLM) {
         setStatus('status.thinking', 'thinking');
         el['text-submit'].classList.add('is-loading');
-        LLM.interpret(transcript).then(function (modelResult) {
+        LLM.interpret(transcript, I18n.get()).then(function (modelResult) {
           el['text-submit'].classList.remove('is-loading');
           idleStatus();
           if (!modelResult) {
@@ -320,17 +320,17 @@
             return;
           }
           renderResult({
-            meaning: modelResult.ru_meaning,
-            action: modelResult.ru_action,
+            meaning: modelResult.meaning,
+            action: modelResult.action,
             reply_hu: modelResult.reply_hu,
-            reply_gloss: modelResult.reply_ru
+            reply_gloss: modelResult.reply_gloss
           }, {
             status: modelResult.modelConfident ? 'uncertain' : 'unknown',
             source: 'model',
             provider: modelResult.provider,
             score: null
           });
-          pushHistory(transcript, { status: 'uncertain', text: modelResult.ru_meaning });
+          pushHistory(transcript, { status: 'uncertain', text: modelResult.meaning });
         });
       }
       reveal(options);

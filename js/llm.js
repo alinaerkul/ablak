@@ -58,27 +58,34 @@
    * we are asking for the same three fields the corpus provides, so the UI
    * can render either source through one code path.
    */
-  var SYSTEM_PROMPT = [
-    'You help a Russian-speaking international student understand what a',
-    'Hungarian official just said to them at a government office, bank or',
-    'clinic counter.',
-    '',
-    'Reply with ONLY a JSON object, no markdown fence, with these keys:',
-    '  "meaning_ru"  - what the official is asking, in plain Russian, one sentence.',
-    '  "action_ru"   - what the student should do right now, in Russian, one sentence.',
-    '  "reply_hu"    - a short, polite Hungarian sentence the student can say back.',
-    '  "reply_ru"    - a Russian gloss of reply_hu.',
-    '  "confident"   - true only if you are sure what the Hungarian means.',
-    '',
-    'Rules you must follow:',
-    '- Never invent a document name, a fee amount, a deadline or a legal',
-    '  requirement. If the phrase implies a document you cannot identify',
-    '  with certainty, set "confident" to false and make action_ru tell the',
-    '  student to ask the official to write it down.',
-    '- If the input looks like speech recognition noise rather than a',
-    '  sentence, set "confident" to false.',
-    '- Keep reply_hu simple enough for a beginner to pronounce.'
-  ].join('\n');
+  /* Built per call, in the interface language. The first version was
+   * written for Russian only, so an English user got a Russian explanation
+   * from the model while every corpus card answered in English. */
+  function systemPrompt(lang) {
+    var L = lang === 'ru' ? 'Russian' : 'English';
+    return [
+      'You help an international student understand what a Hungarian',
+      'official just said to them at a government office, bank or clinic',
+      'counter. The student reads ' + L + '.',
+      '',
+      'Reply with ONLY a JSON object, no markdown fence, with these keys:',
+      '  "meaning"     - what the official is asking, in plain ' + L + ', one sentence.',
+      '  "action"      - what the student should do right now, in ' + L + ', one sentence.',
+      '  "reply_hu"    - a short, polite Hungarian sentence the student can say back.',
+      '  "reply_gloss" - a gloss of reply_hu in ' + L + '.',
+      '  "confident"   - true only if you are sure what the Hungarian means.',
+      '',
+      'Rules you must follow:',
+      '- Write "meaning", "action" and "reply_gloss" in ' + L + ' only.',
+      '- Never invent a document name, a fee amount, a deadline or a legal',
+      '  requirement. If the phrase implies a document you cannot identify',
+      '  with certainty, set "confident" to false and make "action" tell the',
+      '  student to ask the official to write it down.',
+      '- If the input looks like speech recognition noise rather than a',
+      '  sentence, set "confident" to false.',
+      '- Keep reply_hu simple enough for a beginner to pronounce.'
+    ].join('\n');
+  }
 
   function loadConfig() {
     try {
@@ -211,29 +218,34 @@
    * "I did not understand, ask them to repeat" — never to an error dialog
    * while the user is mid-conversation at a counter.
    */
-  function interpret(transcript) {
+  function interpret(transcript, lang) {
+    lang = lang === 'ru' ? 'ru' : 'en';
     var config = loadConfig();
     if (!config || !config.apiKey) return Promise.resolve(null);
     var provider = PROVIDERS[config.provider];
     if (!provider) return Promise.resolve(null);
 
     return chat(config, provider, [
-      { role: 'system', content: SYSTEM_PROMPT },
+      { role: 'system', content: systemPrompt(lang) },
       { role: 'user', content: 'The official said, in Hungarian: "' + transcript + '"' }
     ]).then(function (res) {
       if (!res.ok) return null;
       var parsed = extractJson(contentOf(res.data));
-      if (!parsed || !parsed.meaning_ru) return null;
+      /* Older key names are still accepted, in case a model echoes them. */
+      if (!parsed) return null;
+      var meaning = parsed.meaning || parsed['meaning_' + lang];
+      if (!meaning) return null;
 
       /* Normalise into the same shape the corpus produces, so app.js
        * renders both through one path. Note doc is always null here. */
       return {
         source: 'model',
         provider: provider.label,
-        ru_meaning: parsed.meaning_ru,
-        ru_action: parsed.action_ru || '',
+        lang: lang,
+        meaning: meaning,
+        action: parsed.action || parsed['action_' + lang] || '',
         reply_hu: parsed.reply_hu || '',
-        reply_ru: parsed.reply_ru || '',
+        reply_gloss: parsed.reply_gloss || parsed['reply_' + lang] || '',
         doc: null,
         modelConfident: parsed.confident === true
       };
@@ -297,6 +309,7 @@
     interpret: interpret,
     translate: translate,
     pickModel: pickModel,
+    systemPrompt: systemPrompt,
     extractJson: extractJson
   };
 })();

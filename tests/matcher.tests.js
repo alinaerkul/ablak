@@ -603,6 +603,12 @@
         LL.pickModel(['whisper-large-v3', 'canopylabs/orpheus-v1-english', 'meta-llama/llama-guard-4-12b', 'some/chat-model']) === 'some/chat-model');
       assert('llm: returns null when nothing usable is listed',
         LL.pickModel(['whisper-large-v3-turbo']) === null && LL.pickModel([]) === null && LL.pickModel(null) === null);
+      assert('llm: the explanation is asked for in English for an English interface',
+        /in plain English/.test(LL.systemPrompt('en')) && !/Russian/.test(LL.systemPrompt('en')));
+      assert('llm: the explanation is asked for in Russian for a Russian interface',
+        /in plain Russian/.test(LL.systemPrompt('ru')) && !/English/.test(LL.systemPrompt('ru')));
+      assert('llm: the explanation prompt still forbids naming a document',
+        /Never invent a document name/.test(LL.systemPrompt('en')) && /Never invent a document name/.test(LL.systemPrompt('ru')));
     }
 
     var WH = win.AblakWhisper;
