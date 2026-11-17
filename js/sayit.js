@@ -4,7 +4,7 @@
  * The other half of a conversation. The user speaks (or types) in English or
  * Russian; the app says it in Hungarian. Two paths, kept visibly different:
  *
- *   1. A PREPARED PHRASE. The utterance is matched against the 111 ready-made
+ *   1. A PREPARED PHRASE. The utterance is matched against the ready-made
  *      Hungarian phrases (js/phrases.js, ABLAK_SAY). If one is clearly the
  *      closest, its Hungarian is shown with what it means. These were written
  *      once and can be checked by a person, so this is the trusted path.

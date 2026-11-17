@@ -63,7 +63,7 @@
           <li><strong>Fonts.</strong> Manrope, Inter and IBM Plex Mono load from Google Fonts, so your IP address is sent to Google when a page loads.</li>
           <li><strong>Optional AI fallback.</strong> Off by default. If you turn it on with your own key, the text that was heard is sent to the provider you choose (Groq or Google).</li>
           <li><strong>Optional Whisper recognition.</strong> Off by default. If you turn it on in Settings with your own Groq key, a short recording of your speech is sent to Groq instead of your browser's speech service. Ablak does not store it.</li>
-          <li><strong>Optional translation.</strong> If you add an AI key, the English or Russian text you say or type in "Say it in Hungarian" is sent to that provider to be translated, and the result is labelled unverified.</li>
+          <li><strong>Optional translation.</strong> If you add an AI key, the English or Russian text you say or type in "Say it in Hungarian" is sent to that provider to be translated, together with the place you selected (for example "bank"), so ambiguous words are read correctly. The result is labelled unverified.</li>
           <li>The company hosting this page may keep ordinary server logs.</li>
         </ul>
       </div>
@@ -71,7 +71,7 @@
         <span class="badge">Stored</span>
         <h3 style="margin-top:12px">What is saved, if anything</h3>
         <ul>
-          <li>Your language choice, in your browser's local storage.</li>
+          <li>Your language choice and whether "speak it aloud automatically" is on, in your browser's local storage.</li>
           <li>If you enable the AI fallback or Whisper, your API key and that choice, also in local storage on your device only.</li>
           <li>Nothing else. No cookies, no accounts, no analytics, no recordings.</li>
         </ul>

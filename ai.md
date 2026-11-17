@@ -9,7 +9,8 @@ product and technical decisions is in [`DECISIONS.md`](DECISIONS.md).
 
 | Tool | What it was used for |
 |---|---|
-| **Claude (Anthropic), used through Claude Code in agentic coding sessions; called "the assistant" below.** The first version used Claude Opus 5; the later additions (more phrases, practice mode, courier card, call simulator, site redesign, write-up) used Claude Sonnet 5.5; the final fixes and documentation used Claude Opus 5.5. | Nearly all of the implementation: the matcher, the speech wrappers, the UI, the test suites, the practice dialogues, the courier card, the call simulator, the site design, and the first drafts of these documents. |
+| **Claude (Anthropic), used through Claude Code in agentic coding sessions; called "the assistant" below.** The first version used Claude Opus 5; the later additions (more phrases, practice mode, courier card, call simulator, site redesign, write-up) used Claude Sonnet 5.5; the final fixes and documentation used Claude Opus 5.5. | Nearly all of the implementation: the matcher, the speech wrappers, the UI, the test suites, the practice dialogues, the courier card, the call simulator, the site's HTML and CSS built to match the design image below, and the first drafts of these documents. |
+| **ChatGPT (OpenAI)** | The visual design. I wrote a detailed description of the project, its functions and its goal, and asked for several design options. I chose one, had ChatGPT generate an image of it, and gave that image to the assistant to build the site from. No code came from ChatGPT. |
 | **Web search (run by the assistant)** | Checking which speech and LLM APIs currently have a free tier with no credit card, so the submission would run on your machine without a key of mine. |
 | **Google Chrome + Playwright** | Running the automated end-to-end suite (51 checks) against the real page in Chrome. A test tool, not an AI tool. Most of the problems that mattered in practice were found by me using the site and telling the assistant how it should work (see below). |
 
@@ -55,8 +56,10 @@ decisions from earlier sessions survive into later ones: when a long session was
 summarised and continued, the rules were still there.
 
 **3. Small tasks, one at a time.** I described each task concretely — what it
-should do and how it should behave — rather than asking for "an app". Design came
-from a written brief and a mockup I supplied.
+should do and how it should behave — rather than asking for "an app". For the
+design, I described the project to ChatGPT, chose one of the options it offered,
+had it generate an image of that design, and gave the image to the agent, which
+built the site to match.
 
 **4. Checks after every change.** The agent ran the unit and browser suites after
 each change and reported the result, and checked the running page in a browser.
@@ -86,8 +89,8 @@ Hungaricum scholarship, and when I tried to book a dentist at a state hospital I
 could not follow the receptionist, waited an hour and left without an
 appointment. I also run **Jany Jashoo**, an information platform for Central
 Asian students coming to Hungary. I described what I wanted built, step by step,
-and made the product decisions: the scope for the deadline, the name, the design
-direction, which tools to include, and what to leave for later.
+and made the product decisions: the scope for the deadline, the name, which of the
+design options to use, which tools to include, and what to leave for later.
 
 Before anything was built, I chose the idea against three conditions: it had to be
 realistic to finish well before the deadline, Hiya had to be able to test it
@@ -96,8 +99,9 @@ problem. Ideas that failed one of these were dropped or left for later, such as
 real phone calls. The details are in [`DECISIONS.md`](DECISIONS.md).
 
 **Claude implemented it.** That covers all of the code: the matcher, the speech
-wrappers, the interface, the test suites, the booking practice, the courier card,
-the call simulator, the site design and the documents. I directed it at the level
+wrappers, the interface (built to match the design image I chose), the test suites, the
+booking practice, the courier card, the call simulator, and the first drafts of
+the documents. I directed it at the level
 of what the product should do — it must run without a key, show three visibly
 different confidence states, label model output differently from verified output,
 and have an agent that always says it is an AI and never decides for the user —
@@ -236,15 +240,28 @@ and to check that what was written is true.
 
 ## Known limits
 
-Stated plainly, so nothing here has to be discovered:
+The weak spots, stated plainly so nobody has to find them:
 
-- **The 40/60 blend** between the two matching signals came from tuning against
-  the test suite, not from a derivation. The reasoning behind favouring keywords
-  is that at a counter, precision matters more than recall.
-- **The confidence threshold (0.52)** is fitted to the same suite, which is 237
-  phrases, all generated by the assistant and checked by me for content. It is therefore not an
-  unbiased estimate of real-world accuracy, and it should be revisited with real
-  phrases from students and public-service staff.
-- **Scale.** The corpus approach should scale per counter, not across all of
-  bureaucracy. The honest product is a narrow one that is right, plus a
-  clearly labelled fallback that is sometimes right.
+- **The 40/60 mix was found by trying, not calculated.** The matcher combines two
+  signals: 40% from small 4-letter pieces of words (which survive Hungarian
+  endings) and 60% from rare keywords (a word found in only one phrase is strong
+  evidence). We tried different mixes and kept the one under which the test
+  phrases matched correctly. Nobody proved that 40/60 is the best mix. Keywords
+  weigh more on purpose: at a counter it is more important to be right when the
+  app answers than to answer as often as possible.
+- **The confidence threshold (0.52) was chosen with the same phrases it is tested
+  on.** Above 0.52 the app says "High confidence". That number was set using the
+  same 237 phrases the tests use, which is like practising on the exact questions
+  of an exam: a perfect score does not show how the app does with a real clerk,
+  who uses other words, speaks fast, in a noisy room. The phrases were written by
+  the AI assistant (a few based on visits I described) and I checked their
+  content, but they are not recordings of real clerks. Real accuracy is not
+  measured yet. The fix is to collect real phrases from students and from
+  hospital and office staff, test on those, and adjust the threshold.
+- **It works place by place, not for all of bureaucracy.** It works because each
+  place has a limited set of phrases that repeat all day, so a prepared list can
+  cover them and every phrase can be checked. One list for every office in
+  Hungary would be too big to check and full of phrases that look alike. So the
+  honest product is a narrow core that is right, extended one place at a time,
+  plus a clearly labelled optional model that is sometimes right, for anything
+  outside the list.
