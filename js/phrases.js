@@ -1474,12 +1474,14 @@ window.ABLAK_PHRASES = [
     keywords: ['segíthetek', 'miben', 'kívánok'],
     ru_meaning: 'Вас приветствуют и спрашивают, чем могут помочь.',
     ru_action: 'Коротко скажите, зачем пришли: к врачу, в банк, подать документы. Называйте одну причину.',
-    reply_hu: 'Jó napot kívánok! Szeretnék orvoshoz menni.',
-    reply_ru: 'Добрый день! Я хочу попасть к врачу.',
+    /* Neutral on purpose: this greeting is heard at every counter, and a
+     * doctor-specific reply was suggested in a phone shop. */
+    reply_hu: 'Jó napot kívánok! Segítséget szeretnék kérni.',
+    reply_ru: 'Добрый день! Мне нужна помощь.',
     ru_doc: null,
     en_meaning: 'They greet you and ask how they can help.',
     en_action: 'Say briefly why you came: to see a doctor, the bank, submit documents. Give one reason.',
-    reply_en: 'Good afternoon! I would like to see a doctor.',
+    reply_en: 'Good afternoon! I would like some help.',
     en_doc: null,
     risk: 'low'
   },
@@ -4977,6 +4979,46 @@ window.ABLAK_PHRASES = [
     reply_en: 'How much data is included in the EU?',
     en_doc: null,
     risk: 'medium'
+  },
+  {
+    id: 'tel_sim_ready',
+    scenario: 'telecom',
+    hu: 'Ez az új telefonszáma, a SIM-kártya egy órán belül aktív lesz.',
+    variants: [
+      'Kész is, egy órán belül működik a SIM-kártya.',
+      'A SIM-kártyája hamarosan aktiválódik.'
+    ],
+    keywords: ['aktív', 'órán', 'aktiválódik', 'működik', 'hamarosan'],
+    ru_meaning: 'Всё готово: вам показывают ваш новый номер, SIM-карта заработает в течение часа.',
+    ru_action: 'Запишите номер и сохраните его. Если через час связи нет, перезагрузите телефон. Спросите, как пополнять баланс или оплачивать счёт.',
+    reply_hu: 'Köszönöm szépen! Hogyan tudok fizetni?',
+    reply_ru: 'Большое спасибо! Как я могу оплачивать?',
+    ru_doc: null,
+    en_meaning: 'All done: they show you your new number, and the SIM card will work within an hour.',
+    en_action: 'Write the number down and save it. If it does not work after an hour, restart your phone. Ask how to top up or pay the bill.',
+    reply_en: 'Thank you very much! How can I pay?',
+    en_doc: null,
+    risk: 'low'
+  },
+  {
+    id: 'tel_documents_list',
+    scenario: 'telecom',
+    /* The full list a phone shop gave the author. Keywords are the four
+     * documents themselves, so the sentence wins over the single-document
+     * immigration and bank cards it contains. */
+    hu: 'A regisztrációhoz kérem az útlevelét, a tartózkodási engedélyét, a lakcímkártyáját és a diákigazolványát.',
+    variants: [],
+    keywords: ['regisztrációhoz', 'útlevelét', 'tartózkodási', 'engedélyét', 'lakcímkártyáját', 'diákigazolványát'],
+    ru_meaning: 'Для регистрации SIM-карты просят четыре документа: паспорт, ВНЖ, адресную карту и студенческий.',
+    ru_action: 'Достаньте все четыре. Адресную карту (лист A4 с QR-кодом) можно показать на телефоне.',
+    reply_hu: 'Igen, persze. Tessék, itt vannak az irataim.',
+    reply_ru: 'Да, конечно. Вот мои документы.',
+    ru_doc: 'Паспорт + ВНЖ + lakcímkártya + студенческий',
+    en_meaning: 'To register the SIM card they need four documents: passport, residence permit, address card and student ID.',
+    en_action: 'Take out all four. The address card (the A4 sheet with a QR code) can be shown on your phone.',
+    reply_en: 'Yes, sure. Here are my documents.',
+    en_doc: 'Passport + residence permit + lakcímkártya + student ID',
+    risk: 'low'
   }
 ];
 
@@ -6004,7 +6046,7 @@ window.ABLAK_SAY = [
     ru: 'Я хочу купить венгерскую SIM-карту.',
     label_en: 'Buy a SIM card',
     en: 'I would like to buy a Hungarian SIM card.',
-    alts_en: ['I need a SIM card', 'I want a Hungarian phone number'],
+    alts_en: ['I need a SIM card', 'I need a new SIM card', 'I want a new SIM card', 'I want a Hungarian phone number'],
     alts_ru: ['Мне нужна SIM-карта', 'Хочу венгерский номер'],
   },
   {
@@ -6017,7 +6059,8 @@ window.ABLAK_SAY = [
     ru: 'Объясните, пожалуйста, в чём разница между двумя тарифами.',
     label_en: 'Difference between plans',
     en: 'Please explain the difference between the two plans.',
-    alts_en: ['What is the difference between the two plans', 'Explain the difference between the two plans',
+    alts_en: ['Can you explain the difference', 'Could you explain the difference',
+              'What is the difference between the two plans', 'Explain the difference between the two plans',
               'What is the difference between the plans', 'What is the difference between prepaid and monthly'],
     alts_ru: ['В чём разница между тарифами', 'Какая разница между тарифами', 'Объясните разницу между тарифами'],
   },
@@ -6053,5 +6096,38 @@ window.ABLAK_SAY = [
     en: 'My mobile internet has not worked since yesterday.',
     alts_en: ['My mobile data is not working', 'My internet does not work'],
     alts_ru: ['Не работает мобильный интернет'],
+  },
+  {
+    id: 'say_tel_prepaid',
+    scenario: 'telecom',
+    label: 'Хочу с предоплатой',
+    hu: 'Feltöltőkártyás csomagot kérek.',
+    ru: 'Мне тариф с предоплатой, пожалуйста.',
+    label_en: 'Prepaid, please',
+    en: 'I would like a prepaid plan, please.',
+    alts_en: ['I need a prepaid one', 'I need a prepaid one please', 'Prepaid please', 'I want prepaid'],
+    alts_ru: ['Мне с предоплатой', 'Хочу предоплату'],
+  },
+  {
+    id: 'say_tel_data',
+    scenario: 'telecom',
+    label: 'Нужно 20 ГБ',
+    hu: 'Húsz gigabájtra van szükségem.',
+    ru: 'Мне нужно 20 гигабайт.',
+    label_en: 'I need 20 GB',
+    en: 'I need 20 gigabytes.',
+    alts_en: ['I need twenty gigabytes', 'I need 20 GB', '20 gigabytes please'],
+    alts_ru: ['Мне нужно двадцать гигабайт'],
+  },
+  {
+    id: 'say_here_documents',
+    scenario: 'generic',
+    label: 'Вот мои документы',
+    hu: 'Igen, persze. Tessék, itt vannak az irataim.',
+    ru: 'Да, конечно. Вот мои документы.',
+    label_en: 'Here are my documents',
+    en: 'Yes, sure. Here are my documents.',
+    alts_en: ['Here are my documents', 'Oh yes sure here are my documents', 'Yes here are my documents'],
+    alts_ru: ['Вот мои документы', 'Да, вот документы'],
   }
 ];

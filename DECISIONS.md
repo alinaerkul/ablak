@@ -17,7 +17,7 @@ failed any of them:
 
 1. **It can be built well before the deadline.** I chose a narrow product I could
    finish and test properly, instead of a larger one I could only half build. That
-   is why there are five places and 237 phrases rather than "all of Hungarian
+   is why there are five places and 239 phrases rather than "all of Hungarian
    bureaucracy", and why the call agent is a simulator rather than real calls.
 2. **Hiya can test it without any problems.** No key, no account, no install and no
    server of mine: open the live link, or clone the repository and run one command.
@@ -197,7 +197,7 @@ tested.
 
 ### 9. How the matching works
 
-The core compares what was heard with 237 prepared phrases (840 spoken forms). It
+The core compares what was heard with 239 prepared phrases (844 spoken forms). It
 uses two signals, because each fails in a different way:
 
 | Signal | Weight | What it handles |
@@ -220,7 +220,7 @@ every bank phrase stop counting as evidence.
 
 | Option | Why not now |
 |---|---|
-| A real Hungarian morphological analyser (Hunspell-hu, emMorph) | Adds a dependency; 8-letter stems work well enough for 237 phrases |
+| A real Hungarian morphological analyser (Hunspell-hu, emMorph) | Adds a dependency; 8-letter stems work well enough for 239 phrases |
 | Edit distance (Levenshtein) | Handles typos, but handles long Hungarian endings worse than 4-grams |
 | Meaning-based search with embeddings | Understands paraphrases, but needs a large model download or a key, and is harder to explain. **Good candidate once there is real data** |
 | A language model as the classifier | Needs a key; answers change between runs; cannot be tested the same way |
@@ -276,7 +276,7 @@ one place. There is no server-side part, so no server is needed.
 
 | Stays in the browser | Goes out | Stored |
 |---|---|---|
-| The matcher and all 237 phrases; anything typed or tapped; the practice, simulator and courier card | Spoken input to the browser's speech service (Google in Chrome); fonts from Google Fonts; with a key, requests to Groq or Gemini | The interface language and, only if added, the API key — in the user's own browser |
+| The matcher and all 239 phrases; anything typed or tapped; the practice, simulator and courier card | Spoken input to the browser's speech service (Google in Chrome); fonts from Google Fonts; with a key, requests to Groq or Gemini | The interface language and, only if added, the API key — in the user's own browser |
 
 There is no account, no analytics and no database. A content-security policy
 limits the page to those hosts. I do not claim "nothing leaves the device",

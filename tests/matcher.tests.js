@@ -556,6 +556,12 @@
         ['У меня болит голова', 'say_clinic_headache'],
         /* Once fell through to machine translation, which said "plants". */
         ['Explain the difference between the two plans', 'say_tel_difference'],
+        ['Can you explain the difference?', 'say_tel_difference'],
+        /* The phone-shop demo, said in English. */
+        ['I need a new SIM card', 'say_tel_sim'],
+        ['I need a prepaid one, please', 'say_tel_prepaid'],
+        ['Oh yes, sure, here are my documents', 'say_here_documents'],
+        ['I need 20 gigabytes', 'say_tel_data'],
         ['В чём разница между тарифами?', 'say_tel_difference']
       ];
       var wrong = asks.filter(function (a) {
