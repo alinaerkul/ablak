@@ -17,6 +17,10 @@ and English to come along to a hospital, a bank or a public office. Ablak is for
 the moment at the counter when there is nobody to ask. The longer story is in
 [`WRITEUP.md`](WRITEUP.md).
 
+Why each decision was made, with the alternatives considered, is in
+[`DECISIONS.md`](DECISIONS.md). How AI tools were used and how I directed the
+agent is in [`ai.md`](ai.md).
+
 ---
 
 ## Run it
@@ -78,7 +82,7 @@ Settings → *Проверить венгерский голос* reports whethe
 ## Run the tests
 
 Open **http://localhost:8000/tests/index.html** (with the server running): it
-runs 143 assertions in the browser and should report `143 passed · 0 failed`.
+runs 159 assertions in the browser and should report `159 passed · 0 failed`.
 The same file also runs under node if you have it:
 
 ```bash
@@ -101,8 +105,8 @@ Both suites found real bugs during development, listed in `ai.md`.
 ## What it does
 
 1. **Listens in Hungarian** (`hu-HU`) continuously via the Web Speech API.
-2. **Matches** the transcript against a curated corpus of 212 things officials
-   actually say at four counters — immigration, bank, clinic, supermarket — in 765 surface
+2. **Matches** the transcript against a curated corpus of 237 things officials
+   actually say at five places — immigration, bank, clinic, supermarket, mobile & internet — in 840 surface
    forms.
 3. **Answers in the user's language** (English or Russian) with three things,
    in this order:
@@ -116,10 +120,10 @@ Both suites found real bugs during development, listed in `ai.md`.
 
 The user can also initiate. Four essential phrases ("could you repeat that",
 "please speak more slowly", "could you write that down", "I do not understand")
-and 111 ready phrases grouped by counter are spoken aloud in Hungarian on one tap.
+and 116 ready phrases grouped by counter are spoken aloud in Hungarian on one tap.
 
 The other direction is covered too: **Your reply in Hungarian**, in the result column
-right under the guidance. Speak or type in English or Russian; the app matches your words to the closest of the 111 prepared
+right under the guidance. Speak or type in English or Russian; the app matches your words to the closest of the 116 prepared
 Hungarian phrases and shows what it means before you tap *Speak it*. Nothing is
 said aloud automatically, because word overlap cannot tell "block my card" from
 "my card has been blocked". If a free AI key is saved in Settings, anything that is
@@ -128,8 +132,9 @@ unverified machine translation with a back-translation to check.
 
 Three more tools sit on the home page, each opening in place:
 
-- **Practice a booking call.** The app plays the clerk in Hungarian for five
-  scripted situations (café, doctor, bank, supermarket, immigration); you answer by
+- **Practice a booking call.** The app plays the clerk in Hungarian for seven
+  scripted situations (café, doctor, bank by phone, bank branch, supermarket,
+  mobile shop, immigration); you answer by
   voice, typing or tapping a suggested reply.
 - **Courier card.** Your address, floor, door and phone in large type, with fixed
   Hungarian phrases for a delivery person. Nothing is saved.
@@ -165,7 +170,8 @@ The brief asks for the moments where a keyboard would not do. This is one:
 A general translator renders words. At a counter, words are not the problem —
 *knowing which document to pull out of the folder* is. "Kérem a lakcímkártyáját"
 translated as "I request your address card" leaves the user no better off; they
-still do not know that it is the small white plastic card and not the passport.
+still do not know that it is the A4 sheet with a QR code (printed or on the
+phone) and not the passport.
 
 Bureaucratic Hungarian is also formulaic. The same forty phrases recur across
 every appointment, which makes a curated corpus tractable in a way that general
@@ -181,7 +187,7 @@ and you may have agreed to something you cannot undo.
 An LLM produces fluent output for every input, including inputs it misheard, and
 cannot tell you which ones it got right. The matcher can: it returns a calibrated
 score, and below threshold it declines and offers to ask the clerk to repeat.
-Several of the 143 checks assert that it refuses. The refusal is a feature, and
+Several of the 159 checks assert that it refuses. The refusal is a feature, and
 it is the feature that makes the rest trustworthy.
 
 There is a **margin guard** on top of the threshold: if the runner-up scores
@@ -267,7 +273,7 @@ privacy.html            what stays in the browser, what leaves, limits
 about.html              story, contact
 css/styles.css          the design system; class names are a contract with js/
 js/i18n.js              interface language (en/ru); Hungarian is never translated
-js/phrases.js           the corpus — 212 cards, 765 surface forms, 111 user phrases
+js/phrases.js           the corpus — 237 cards, 840 surface forms, 116 user phrases
 js/matcher.js           n-gram + IDF matcher and confidence calibration
 js/speech.js            Web Speech API wrappers (recognition + synthesis)
 js/llm.js               optional, opt-in open-vocabulary fallback
@@ -279,9 +285,10 @@ js/callsim.js           call simulator: scripted agent-on-your-behalf calls
 js/app.js               controller: state, rendering, the three-state UI
 js/home.js, js/site.js  tool panels that open in place; mobile menu
 img/                    hero image
-tests/matcher.tests.js  143 assertions, runs in the browser and in node
+tests/matcher.tests.js  159 assertions, runs in the browser and in node
 tests/index.html        browser test runner
 tests/smoke_test.py     end-to-end checks driven through real Chrome
+DECISIONS.md            why each decision was made, and what else was considered
 ai.md                   which AI tools were used and how
 WRITEUP.md              the one-page submission write-up
 ```
@@ -298,8 +305,8 @@ In rough order of how much each would matter to a real user:
    international students about what they were asked at hospitals, banks and
    offices and could not follow, and ask staff at those places which phrases
    they say most. Use that to add many more phrases and the words inside them,
-   not just to rewrite the current 212. The
-   matcher is ready; the corpus is the product. All 212 phrases were generated by
+   not just to rewrite the current 237. The
+   matcher is ready; the corpus is the product. All 237 phrases were generated by
    an AI assistant and I reviewed their content; they still need review by a
    native Hungarian speaker, and none of them come from data.
 2. **Real phone calls on the user's behalf.** The call simulator shows the

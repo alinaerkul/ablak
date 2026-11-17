@@ -468,7 +468,7 @@
     });
   }
 
-  var SAY_ORDER = ['immigration', 'bank', 'clinic', 'supermarket', 'generic'];
+  var SAY_ORDER = ['immigration', 'bank', 'clinic', 'supermarket', 'telecom', 'generic'];
 
   function buildSayList() {
     buildEssentials();

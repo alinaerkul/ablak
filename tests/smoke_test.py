@@ -60,8 +60,11 @@ def run():
         check("say-phrase buttons built",
               page.locator("#say-list .say-btn").count() == expected_say,
               str(page.locator("#say-list .say-btn").count()))
+        # Also derived from the corpus: a literal 5 broke when a counter was added.
+        expected_groups = page.evaluate(
+            "new Set(window.ABLAK_SAY.map(p => p.scenario || 'generic')).size")
         check("say-phrases grouped by counter",
-              page.locator("#say-list .say-group-title").count() == 5,
+              page.locator("#say-list .say-group-title").count() == expected_groups,
               str(page.locator("#say-list .say-group-title").count()))
         check("site navigation lists three destinations",
               page.locator("#site-nav a").count() == 3)

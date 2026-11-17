@@ -274,7 +274,11 @@
     if (LLM && LLM.isEnabled()) {
       setStatus(g(STR.working));
       $('sayit-go').classList.add('is-loading');
-      LLM.translate(text, lang).then(function (res) {
+      /* The chosen counter tells the model which meaning of an ambiguous word
+       * is meant ("plan" at a phone shop is a package, not a plant). */
+      var chip = document.querySelector('#scenario-row .chip-active[data-scenario]');
+      var place = chip ? chip.getAttribute('data-scenario') : '';
+      LLM.translate(text, lang, place).then(function (res) {
         if (token !== run) return;
         $('sayit-go').classList.remove('is-loading');
         setStatus('');

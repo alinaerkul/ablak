@@ -1,6 +1,7 @@
 # ai.md — which AI tools I used, and how
 
-Here is the breakdown of AI usage in this project.
+Here is the breakdown of AI usage in this project. The reasoning behind the
+product and technical decisions is in [`DECISIONS.md`](DECISIONS.md).
 
 ---
 
@@ -8,12 +9,72 @@ Here is the breakdown of AI usage in this project.
 
 | Tool | What it was used for |
 |---|---|
-| **Claude (Anthropic), used through Claude Code in agentic coding sessions; called "the assistant" below.** The first version used Claude Opus 5; the later additions (more phrases, practice mode, courier card, call simulator, site redesign, write-up) used Claude Sonnet 5.5. | Nearly all of the implementation: the matcher, the speech wrappers, the UI, the test suites, the practice dialogues, the courier card, the call simulator, the site design, and the first drafts of these documents. |
+| **Claude (Anthropic), used through Claude Code in agentic coding sessions; called "the assistant" below.** The first version used Claude Opus 5; the later additions (more phrases, practice mode, courier card, call simulator, site redesign, write-up) used Claude Sonnet 5.5; the final fixes and documentation used Claude Opus 5.5. | Nearly all of the implementation: the matcher, the speech wrappers, the UI, the test suites, the practice dialogues, the courier card, the call simulator, the site design, and the first drafts of these documents. |
 | **Web search (run by the assistant)** | Checking which speech and LLM APIs currently have a free tier with no credit card, so the submission would run on your machine without a key of mine. |
 | **Google Chrome + Playwright** | Running the automated end-to-end suite (51 checks) against the real page in Chrome. A test tool, not an AI tool. Most of the problems that mattered in practice were found by me using the site and telling the assistant how it should work (see below). |
 
 No other code generation tool was used. There is no framework, no dependency and
 no build step in the repository, so nothing here is scaffolded from a template.
+
+---
+
+## How I worked with the agent
+
+**One agent, one session at a time.** I did not run several agents or sessions in
+parallel. All the work was done by one Claude Code agent, which I directed in a
+series of sessions. Inside a session the agent could use tools: run the test
+suites, open the page in a browser and take screenshots, search the web, use git,
+and run small scripts (for example, to turn the write-up into a PDF). The
+orchestration was mine: what to build next, in which order, how to check it, and
+what to keep.
+
+This is the loop I used:
+
+**1. Plan first, no code.** For each larger piece of work I asked for a plan before
+any code, and for clarifying questions until nothing was ambiguous. For example,
+when I turned the first version into a guide with several tools, I asked for a
+ten-point plan (purpose, audience, positioning, pages, design, technology, content,
+timeline and so on), answered the questions, and only then let the code be written.
+For smaller changes I asked for options first and chose one (for example, the
+structure of this write-up).
+
+**2. Rules the agent reads at the start of every session.** The project has a
+rules file for the agent (`CLAUDE.md`, kept local). It says what the project is,
+how to run and test it, how fields are named, and five rules that must never be
+broken:
+1. It must run with no API key, no account and no backend.
+2. It must refuse when unsure; raising recall by lowering the threshold is not an
+   improvement.
+3. Model output is never presented as verified and never names a document.
+4. Hungarian is never translated: the Hungarian phrases are identical in every
+   interface language.
+5. Every card is complete in both languages.
+
+It also says that both test suites must pass before any commit. This file is how
+decisions from earlier sessions survive into later ones: when a long session was
+summarised and continued, the rules were still there.
+
+**3. Small tasks, one at a time.** I described each task concretely — what it
+should do and how it should behave — rather than asking for "an app". Design came
+from a written brief and a mockup I supplied.
+
+**4. Checks after every change.** The agent ran the unit and browser suites after
+each change and reported the result, and checked the running page in a browser.
+Then I tested the site myself, on my own computer and the live site, and sent
+screenshots of anything wrong. Most of the issues that mattered to a user were
+found this way (see items 9–14 below).
+
+**5. Keeping, rejecting and undoing.** Not everything the agent built stayed. For
+example, a voice picker was built, I tested it, saw that my Mac had only one
+Hungarian voice so the menu offered no real choice, and had all of it reverted to
+the previous commit.
+
+**6. Checking that the text is true.** I read every document the agent drafted,
+and rewrote anything that was not accurate: an anecdote that was not mine, and
+claims about where the phrases came from (see item 12).
+
+**7. I decide what ships.** The agent commits and pushes only when I ask, after
+the checks pass.
 
 ---
 
@@ -28,6 +89,12 @@ Asian students coming to Hungary. I described what I wanted built, step by step,
 and made the product decisions: the scope for the deadline, the name, the design
 direction, which tools to include, and what to leave for later.
 
+Before anything was built, I chose the idea against three conditions: it had to be
+realistic to finish well before the deadline, Hiya had to be able to test it
+without any problems (no key, no account, no install), and it had to solve a real
+problem. Ideas that failed one of these were dropped or left for later, such as
+real phone calls. The details are in [`DECISIONS.md`](DECISIONS.md).
+
 **Claude implemented it.** That covers all of the code: the matcher, the speech
 wrappers, the interface, the test suites, the booking practice, the courier card,
 the call simulator, the site design and the documents. I directed it at the level
@@ -36,9 +103,10 @@ different confidence states, label model output differently from verified output
 and have an agent that always says it is an AI and never decides for the user —
 and I reviewed what came back and tested it as a real user.
 
-**The Hungarian corpus was generated by the assistant.** All 212 phrase cards and
-their English and Russian explanations, and the 111 phrases the user says, were
-generated by the AI assistant (some based on reception dialogues I supplied). I
+**The Hungarian corpus was generated by the assistant.** All 237 phrase cards and
+their English and Russian explanations, and the 116 phrases the user says, were
+generated by the AI assistant (some based on reception dialogues I supplied, and
+the bank branch practice on a visit I described). I
 went through them and checked the content: what is being asked, what to do and
 which document is meant. A native Hungarian speaker has not yet reviewed the
 Hungarian wording, so until that review is done, treat it as unreviewed.
@@ -62,7 +130,7 @@ To be exact about who did what: the assistant wrote the code and its automated
 tests. The eight code-level bugs below (1 to 8) were found by those tests, by the
 browser console or by reviewing screenshots of the running app, and the assistant
 fixed them; I did not find them myself. The user-visible problems listed after
-them (9 to 12) were found by my own testing as a user. My part was to direct the
+them (9 to 14) were found by my own testing as a user. My part was to direct the
 work, to test the site and tell the assistant how I wanted it to behave, and to
 review what came back.
 
@@ -108,7 +176,7 @@ missing callout; the fallback bug was found while fixing it.
 The English explanations were generated through a script that stripped the
 diacritics: *lakcimkartya* instead of *lakcímkártya*. It reads as sloppy, but
 it is also substantively wrong — the whole point of naming the document is that
-the user matches that word against what is printed on the card in their hand.
+the user matches that word against what is printed on the document in their hand.
 No test caught this. It was found by reviewing a screenshot of the running app.
 
 **7. A gate code that would have been spoken before the user decided.**
@@ -144,8 +212,22 @@ not my real story, and some claims about where the phrases came from and what th
 platform I run provides were not accurate. I noticed this when I read the texts,
 and they were corrected (see "How the work was actually split").
 
+**13. The address card was described wrongly.** The app told users the
+lakcímkártya is "the small white plastic card". From my own experience it is an A4
+sheet with a QR code, which you can also show on your phone. Since the point of
+naming a document is that the user recognises it, this was corrected in the app
+and in every document.
+
+**14. "The two plans" was translated as "the two plants".** In the reply box I
+asked to explain the difference between two phone plans. No prepared phrase
+matched, so the optional machine translation was used, and it chose *növény*
+(plant). The back-translation showed the mistake before I said it, which is why
+it is there. The fix: the prepared phrase now covers this wording and names the
+*csomag* (package), and the translator is told where the user is and that "plan"
+means a package at a counter. Two tests keep it that way.
+
 The first eight were found by tests and by reviewing the running app; the last
-four by me using the site. I think that is the honest argument for how to use
+six by me using the site. I think that is the honest argument for how to use
 these tools: they write more code than I could in three days, so the verification
 has to be real, and a person's job is to direct the work, to test it as a user
 and to check that what was written is true.
@@ -159,7 +241,7 @@ Stated plainly, so nothing here has to be discovered:
 - **The 40/60 blend** between the two matching signals came from tuning against
   the test suite, not from a derivation. The reasoning behind favouring keywords
   is that at a counter, precision matters more than recall.
-- **The confidence threshold (0.52)** is fitted to the same suite, which is 212
+- **The confidence threshold (0.52)** is fitted to the same suite, which is 237
   phrases, all generated by the assistant and checked by me for content. It is therefore not an
   unbiased estimate of real-world accuracy, and it should be revisited with real
   phrases from students and public-service staff.

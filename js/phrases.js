@@ -70,12 +70,12 @@ window.ABLAK_PHRASES = [
      * are specific enough. */
     keywords: ['lakcímkártya', 'lakcímkártyáját', 'lakcímkártyája'],
     ru_meaning: 'Просят lakcímkártya — карточку с адресом проживания.',
-    ru_action: 'Это белая пластиковая карточка с вашим адресом. Передайте её.',
+    ru_action: 'Это лист A4 с QR-кодом, где указан ваш адрес. Передайте распечатку или покажите его на телефоне.',
     reply_hu: 'Igen, itt van.',
     reply_ru: 'Да, вот она.',
     ru_doc: 'Lakcímkártya (карточка адреса)',
     en_meaning: 'They want your lakcímkártya — the address registration card.',
-    en_action: 'It is the small white plastic card with your address on it. Hand it over.',
+    en_action: 'It is the A4 sheet with a QR code that shows your address. Hand over the printout, or show it on your phone.',
     reply_en: 'Yes, here it is.',
     en_doc: 'Lakcímkártya (address card)',
     risk: 'low'
@@ -2813,6 +2813,135 @@ window.ABLAK_PHRASES = [
     en_doc: null,
     risk: 'low'
   },
+  /* ---- BANK, opening a card at a branch and account changes ----
+   * Added from a branch visit described by the author. Before adding, each
+   * line was checked against the existing cards: "Magyar állampolgár?" is
+   * already gen_citizenship and a declined payment is already a supermarket
+   * card, so neither is repeated here. */
+  {
+    id: 'bank_student_id',
+    scenario: 'bank',
+    hu: 'Kérem a diákigazolványát is.',
+    variants: [
+      'Van diákigazolványa?',
+      'A diákigazolványt is kérném.'
+    ],
+    keywords: ['diákigazolványát', 'diákigazolvány', 'diákigazolványa', 'diákigazolványt'],
+    ru_meaning: 'Просят ваш diákigazolvány — студенческий билет.',
+    ru_action: 'Покажите студенческий билет. Для студенческого счёта его обычно просят вместе с паспортом.',
+    reply_hu: 'Igen, tessék.',
+    reply_ru: 'Да, пожалуйста.',
+    ru_doc: 'Diákigazolvány (студенческий билет)',
+    en_meaning: 'They want your diákigazolvány, your student ID.',
+    en_action: 'Show your student ID. For a student account it is usually asked for together with your passport.',
+    reply_en: 'Yes, here you are.',
+    en_doc: 'Diákigazolvány (student ID)',
+    risk: 'low'
+  },
+  {
+    id: 'bank_documents_ok',
+    scenario: 'bank',
+    /* Not "Rendben vannak az iratai": 'iratai' sits too close to 'iratait'
+     * in "Kérem az iratait", so the test suite sent that request here. */
+    hu: 'Minden dokumentuma érvényes.',
+    variants: [
+      'A dokumentumai rendben vannak.',
+      'Minden okmánya érvényes, köszönöm.'
+    ],
+    keywords: ['dokumentuma', 'dokumentumai', 'okmánya', 'érvényes'],
+    ru_meaning: 'Говорят, что ваши документы в порядке и действительны.',
+    ru_action: 'Ничего делать не нужно: заберите документы обратно и ждите следующего шага, обычно это бланк или договор.',
+    reply_hu: 'Köszönöm.',
+    reply_ru: 'Спасибо.',
+    ru_doc: null,
+    en_meaning: 'They say your documents are in order and valid.',
+    en_action: 'Nothing to do: take your documents back and wait for the next step, usually a form or a contract.',
+    reply_en: 'Thank you.',
+    en_doc: null,
+    risk: 'low'
+  },
+  {
+    id: 'bank_notify_ready',
+    scenario: 'bank',
+    hu: 'Telefonon és e-mailben értesítjük, ha elkészült a kártyája.',
+    variants: [
+      'Két hét múlva készül el a kártyája, értesíteni fogjuk.',
+      'Szólunk telefonon, amikor a kártya elkészült.'
+    ],
+    keywords: ['telefonon', 'e-mailben', 'értesítjük', 'értesíteni', 'elkészült', 'készül', 'szólunk'],
+    ru_meaning: 'Говорят, что карта будет готова позже и вам сообщат по телефону и по имейлу.',
+    ru_action: 'Проверьте, что сотрудник записал верный номер телефона и имейл. Уточните, где забирать карту: в этом отделении или придёт по почте.',
+    reply_hu: 'Rendben. Itt kell majd átvennem?',
+    reply_ru: 'Хорошо. Забирать нужно будет здесь?',
+    ru_doc: null,
+    en_meaning: 'They say the card will be ready later and they will let you know by phone and email.',
+    en_action: 'Check that they have your correct phone number and email. Ask where to collect the card: at this branch, or whether it comes by post.',
+    reply_en: 'Okay. Will I collect it here?',
+    en_doc: null,
+    risk: 'low'
+  },
+  {
+    id: 'bank_wrong_transfer',
+    scenario: 'bank',
+    hu: 'Rossz számlaszámra utalta a pénzt?',
+    variants: [
+      'Téves utalást szeretne bejelenteni?',
+      'Elírta a kedvezményezett számlaszámát?'
+    ],
+    keywords: ['rossz', 'téves', 'utalást', 'utalta', 'elírta', 'kedvezményezett', 'bejelenteni'],
+    ru_meaning: 'Спрашивают, отправили ли вы деньги не на тот счёт.',
+    ru_action: 'Скажите да, если это так. Покажите подтверждение перевода в приложении банка: дату, сумму и номер счёта. Банк может попросить вернуть деньги, но вернуть их не гарантирует.',
+    reply_hu: 'Igen, rossz számlára utaltam. Itt az utalás igazolása.',
+    reply_ru: 'Да, я перевела не на тот счёт. Вот подтверждение перевода.',
+    ru_doc: 'Подтверждение перевода (из приложения банка)',
+    en_meaning: 'They ask whether you sent money to the wrong account.',
+    en_action: 'Say yes if so. Show the transfer confirmation in your banking app: date, amount and account number. The bank can ask for the money back but cannot promise it.',
+    reply_en: 'Yes, I sent it to the wrong account. Here is the transfer confirmation.',
+    en_doc: 'Transfer confirmation (from your banking app)',
+    risk: 'medium'
+  },
+  {
+    id: 'bank_update_details',
+    scenario: 'bank',
+    hu: 'Szeretné módosítani a személyes adatait?',
+    variants: [
+      'Új címre költözött?',
+      'Adatmódosítást szeretne?'
+    ],
+    /* "Megváltozott a lakcíme?" was tried and matched imm_address_question
+     * (lakcíme), so the moving variant uses 'költözött' instead. */
+    keywords: ['módosítani', 'adatmódosítást', 'adatait', 'költözött', 'személyes'],
+    ru_meaning: 'Спрашивают, хотите ли вы изменить свои данные: адрес, телефон или имейл.',
+    ru_action: 'Скажите, что изменилось. Для нового адреса покажите новую lakcímkártya (лист A4 с QR-кодом, распечатку или на телефоне). Если её ещё нет, спросите, подойдёт ли договор аренды.',
+    reply_hu: 'Igen, megváltozott a lakcímem.',
+    reply_ru: 'Да, у меня изменился адрес.',
+    ru_doc: 'Новая lakcímkártya',
+    en_meaning: 'They ask whether you want to change your personal details: address, phone or email.',
+    en_action: 'Say what has changed. For a new address, show your new lakcímkártya (the A4 sheet with a QR code, printed or on your phone). If you do not have it yet, ask whether your rental contract is accepted.',
+    reply_en: 'Yes, my address has changed.',
+    en_doc: 'New lakcímkártya',
+    risk: 'low'
+  },
+  {
+    id: 'bank_netbank_login',
+    scenario: 'bank',
+    hu: 'Elfelejtette a netbank belépési adatait?',
+    variants: [
+      'Nem tud belépni a netbankba?',
+      'Új belépési jelszót igényel?'
+    ],
+    keywords: ['elfelejtette', 'belépési', 'belépni', 'netbankba', 'igényel'],
+    ru_meaning: 'Спрашивают, забыли ли вы данные для входа в онлайн-банк.',
+    ru_action: 'Скажите да, если это так, и покажите паспорт. Никогда не называйте свой пароль или код из СМС вслух, даже сотруднику банка.',
+    reply_hu: 'Igen, nem tudok belépni.',
+    reply_ru: 'Да, я не могу войти.',
+    ru_doc: 'Паспорт',
+    en_meaning: 'They ask whether you have forgotten your online banking login.',
+    en_action: 'Say yes if so, and show your passport. Never say your password or an SMS code aloud, not even to bank staff.',
+    reply_en: 'Yes, I cannot log in.',
+    en_doc: 'Passport',
+    risk: 'medium'
+  },
   /* ---- HOSPITAL / CLINIC, more situations ---- */
   {
     id: 'clinic_headache',
@@ -4455,6 +4584,399 @@ window.ABLAK_PHRASES = [
     reply_en: 'Thank you, I understand.',
     en_doc: null,
     risk: 'low'
+  },
+  /* ---- MOBILE & INTERNET (phone shop, home internet) ----
+   * Chosen for where a misunderstanding costs money or a document: the
+   * two-year commitment, early-termination penalties, phone instalments,
+   * unexpected charges and roaming outside the EU. Brand names are left out
+   * on purpose; these phrases are the same at every provider. */
+  {
+    id: 'tel_prepaid_or_monthly',
+    scenario: 'telecom',
+    hu: 'Feltöltőkártyás vagy havidíjas csomagot szeretne?',
+    variants: [
+      'Előre fizetős vagy előfizetéses csomagot kér?',
+      'Kártyás legyen, vagy havidíjas?'
+    ],
+    keywords: ['feltöltőkártyás', 'havidíjas', 'előfizetéses', 'fizetős', 'kártyás'],
+    ru_meaning: 'Спрашивают, какой тариф вы хотите: с предоплатой (feltöltőkártyás) или с ежемесячной оплатой (havidíjas).',
+    ru_action: 'Предоплата: пополняете баланс заранее, договора нет, легко прекратить, когда уедете. Ежемесячный: платите каждый месяц, обычно по договору. Если не уверены, начните с предоплаты.',
+    reply_hu: 'Feltöltőkártyásat szeretnék.',
+    reply_ru: 'Я хочу тариф с предоплатой.',
+    ru_doc: null,
+    en_meaning: 'They ask which kind of plan you want: prepaid (feltöltőkártyás) or monthly (havidíjas).',
+    en_action: 'Prepaid: you top up in advance, there is no contract and it is easy to stop when you leave. Monthly: you pay every month, usually with a contract. If you are not sure, start with prepaid.',
+    reply_en: 'I would like a prepaid plan.',
+    en_doc: null,
+    risk: 'medium'
+  },
+  {
+    id: 'tel_documents',
+    scenario: 'telecom',
+    hu: 'A regisztrációhoz kérek egy fényképes igazolványt.',
+    variants: [
+      'Az előfizetéshez milyen igazolványa van?',
+      'A SIM-kártyához szükségem van az okmányaira.'
+    ],
+    keywords: ['regisztrációhoz', 'előfizetéshez', 'sim-kártyához', 'fényképes', 'okmányaira'],
+    ru_meaning: 'Для оформления SIM-карты или договора просят документ с фотографией.',
+    ru_action: 'Дайте паспорт и ВНЖ. Для договора с ежемесячной оплатой часто просят ещё lakcímkártya (лист A4 с QR-кодом).',
+    reply_hu: 'Tessék, az útlevelem és a tartózkodási engedélyem.',
+    reply_ru: 'Вот мой паспорт и ВНЖ.',
+    ru_doc: 'Паспорт + ВНЖ (для договора часто ещё lakcímkártya)',
+    en_meaning: 'They need an ID with a photo to register the SIM card or the contract.',
+    en_action: 'Give your passport and residence permit. For a monthly contract they often also ask for your lakcímkártya (the A4 sheet with a QR code).',
+    reply_en: 'Here are my passport and my residence permit.',
+    en_doc: 'Passport + residence permit (for a contract, often also lakcímkártya)',
+    risk: 'low'
+  },
+  {
+    id: 'tel_commitment',
+    scenario: 'telecom',
+    hu: 'Két éves hűségidővel kedvezőbb a havidíj.',
+    variants: [
+      'Hűségidős szerződést szeretne?',
+      'Ez a csomag huszonnégy hónap hűségidővel jár.'
+    ],
+    keywords: ['hűségidővel', 'hűségidős', 'hűségidő', 'kedvezőbb', 'huszonnégy'],
+    ru_meaning: 'Предлагают тариф дешевле, если вы подпишете договор на два года (hűségidő — срок обязательств).',
+    ru_action: 'Это значит, что два года нельзя уйти без штрафа, даже если вы уедете из Венгрии. До подписи спросите, сколько стоит досрочное расторжение. Если учитесь меньше двух лет, просите тариф без hűségidő.',
+    reply_hu: 'Hűségidő nélkül is lehet?',
+    reply_ru: 'А можно без срока обязательств?',
+    ru_doc: null,
+    en_meaning: 'They offer a lower monthly fee if you sign for two years (hűségidő is the commitment period).',
+    en_action: 'It means you cannot leave for two years without a penalty, even if you leave Hungary. Before signing, ask what early cancellation costs. If you study here for less than two years, ask for a plan without hűségidő.',
+    reply_en: 'Is it possible without a commitment period?',
+    en_doc: null,
+    risk: 'high'
+  },
+  {
+    id: 'tel_early_termination',
+    scenario: 'telecom',
+    hu: 'Ha hamarabb felmondja, kötbért kell fizetnie.',
+    variants: [
+      'Idő előtti felmondás esetén kötbér van.',
+      'A szerződés felmondásakor kötbért számolunk fel.'
+    ],
+    keywords: ['kötbért', 'kötbér', 'felmondja', 'felmondás', 'felmondásakor', 'hamarabb'],
+    ru_meaning: 'Говорят, что за досрочное расторжение договора нужно заплатить штраф (kötbér).',
+    ru_action: 'Попросите точную сумму письменно. Спросите, считается ли отъезд из Венгрии причиной для расторжения без штрафа. Не подписывайте, пока не знаете сумму.',
+    reply_hu: 'Mennyi a kötbér? Kérem írásban.',
+    reply_ru: 'Какой штраф? Дайте, пожалуйста, письменно.',
+    ru_doc: null,
+    en_meaning: 'They say cancelling the contract early means paying a penalty (kötbér).',
+    en_action: 'Ask for the exact amount in writing. Ask whether leaving Hungary lets you cancel without the penalty. Do not sign until you know the amount.',
+    reply_en: 'How much is the penalty? In writing, please.',
+    en_doc: null,
+    risk: 'high'
+  },
+  {
+    id: 'tel_device_instalment',
+    scenario: 'telecom',
+    hu: 'A készülékre még részletfizetés van.',
+    variants: [
+      'A telefon részleteit még fizetnie kell.',
+      'Még van hátralévő készülékrészlet.'
+    ],
+    keywords: ['készülékre', 'részletfizetés', 'részleteit', 'készülékrészlet', 'hátralévő'],
+    ru_meaning: 'Говорят, что за телефон ещё не выплачена рассрочка.',
+    ru_action: 'Спросите, сколько осталось и нужно ли платить всё сразу, если вы расторгаете договор. Ничего не подписывайте, пока не узнаете сумму.',
+    reply_hu: 'Mennyi van még hátra?',
+    reply_ru: 'Сколько ещё осталось?',
+    ru_doc: null,
+    en_meaning: 'They say you still owe instalments for the phone.',
+    en_action: 'Ask how much is left and whether it all has to be paid at once if you cancel. Do not sign anything until you know the amount.',
+    reply_en: 'How much is left?',
+    en_doc: null,
+    risk: 'high'
+  },
+  {
+    id: 'tel_data_amount',
+    scenario: 'telecom',
+    hu: 'Mennyi mobilinternetre van szüksége havonta?',
+    variants: [
+      'Hány gigabájt adatforgalom legyen a csomagban?',
+      'Korlátlan mobilnetet szeretne?'
+    ],
+    keywords: ['mobilinternetre', 'gigabájt', 'adatforgalom', 'korlátlan', 'mobilnetet'],
+    ru_meaning: 'Спрашивают, сколько мобильного интернета (в гигабайтах) вам нужно в месяц.',
+    ru_action: 'Назовите примерное число. Если дома есть Wi-Fi, обычно хватает 10–20 ГБ. Спросите, что будет, если трафик закончится раньше.',
+    reply_hu: 'Körülbelül húsz gigabájt elég.',
+    reply_ru: 'Примерно двадцати гигабайт хватит.',
+    ru_doc: null,
+    en_meaning: 'They ask how much mobile data (in gigabytes) you need per month.',
+    en_action: 'Give a rough number. With Wi-Fi at home, 10–20 GB is usually enough. Ask what happens if the data runs out early.',
+    reply_en: 'About twenty gigabytes is enough.',
+    en_doc: null,
+    risk: 'low'
+  },
+  {
+    id: 'tel_not_available',
+    scenario: 'telecom',
+    hu: 'A szolgáltatás jelenleg nem elérhető az Ön címén.',
+    variants: [
+      'Erre a címre nem tudunk internetet bekötni.',
+      'Ezen a címen nincs lefedettségünk.'
+    ],
+    keywords: ['szolgáltatás', 'elérhető', 'bekötni', 'lefedettségünk', 'címén'],
+    ru_meaning: 'Говорят, что по вашему адресу они не могут подключить домашний интернет.',
+    ru_action: 'Подключения по этому адресу не будет, ничего не оплачивайте. Спросите про мобильный роутер (интернет через мобильную сеть) или проверьте другого оператора.',
+    reply_hu: 'Van más megoldás, például mobilinternetes router?',
+    reply_ru: 'Есть другой вариант, например мобильный роутер?',
+    ru_doc: null,
+    en_meaning: 'They say they cannot connect home internet at your address.',
+    en_action: 'There will be no connection at this address, so do not pay anything. Ask about a mobile router (internet over the mobile network), or check another provider.',
+    reply_en: 'Is there another option, for example a mobile router?',
+    en_doc: null,
+    risk: 'medium'
+  },
+  {
+    id: 'tel_technician',
+    scenario: 'telecom',
+    hu: 'A szerelő érkezésekor valakinek otthon kell lennie.',
+    variants: [
+      'A bekötéshez otthon kell tartózkodnia.',
+      'A szerelőnk délelőtt nyolc és tizenkettő között érkezik.'
+    ],
+    keywords: ['szerelő', 'szerelőnk', 'bekötéshez', 'érkezésekor', 'tartózkodnia'],
+    ru_meaning: 'Говорят, что при приходе мастера для подключения интернета кто-то должен быть дома.',
+    ru_action: 'Уточните день и временной интервал, попросите позвонить перед приходом. Если квартира съёмная, заранее предупредите хозяина.',
+    reply_hu: 'Melyik napon és hány órakor jön a szerelő?',
+    reply_ru: 'В какой день и во сколько придёт мастер?',
+    ru_doc: null,
+    en_meaning: 'They say someone must be at home when the technician comes to install the internet.',
+    en_action: 'Ask for the day and the time window, and ask them to call before coming. If you rent, tell your landlord in advance.',
+    reply_en: 'On which day and at what time will the technician come?',
+    en_doc: null,
+    risk: 'low'
+  },
+  {
+    id: 'tel_bill_international',
+    scenario: 'telecom',
+    hu: 'A számláján nemzetközi hívásokért is van díj.',
+    variants: [
+      'A csomagja nem tartalmazza a nemzetközi hívásokat.',
+      'A külföldre irányuló hívásokat külön számláztuk.'
+    ],
+    keywords: ['nemzetközi', 'hívásokért', 'hívásokat', 'külföldre', 'számláztuk', 'irányuló'],
+    ru_meaning: 'Объясняют, что счёт выше, потому что звонки за границу оплачиваются отдельно.',
+    ru_action: 'Попросите подробный список звонков. Чтобы звонить домой бесплатно, используйте интернет-звонки через Wi-Fi.',
+    reply_hu: 'Kérem a hívások részletes listáját.',
+    reply_ru: 'Дайте, пожалуйста, подробный список звонков.',
+    ru_doc: null,
+    en_meaning: 'They explain the bill is higher because calls abroad are charged separately.',
+    en_action: 'Ask for an itemised list of calls. To call home for free, use internet calls over Wi-Fi.',
+    reply_en: 'Please give me an itemised list of the calls.',
+    en_doc: null,
+    risk: 'medium'
+  },
+  {
+    id: 'tel_payment_deadline',
+    scenario: 'telecom',
+    hu: 'Késedelmes fizetés esetén késedelmi díjat számolunk fel.',
+    variants: [
+      'Ha nem fizet időben, korlátozzuk a szolgáltatást.',
+      'A számlát a fizetési határidőig kell kiegyenlíteni.'
+    ],
+    keywords: ['késedelmes', 'késedelmi', 'korlátozzuk', 'kiegyenlíteni', 'határidőig'],
+    ru_meaning: 'Говорят, что за просроченную оплату счёта берут пеню, а связь могут ограничить.',
+    ru_action: 'Узнайте дату оплаты и способы оплаты. Чтобы не забыть, спросите про автоматическую оплату с карты.',
+    reply_hu: 'Be lehet állítani automatikus fizetést?',
+    reply_ru: 'Можно настроить автоматическую оплату?',
+    ru_doc: null,
+    en_meaning: 'They say a late payment means a late fee, and they may restrict your service.',
+    en_action: 'Find out the payment date and how you can pay. So you do not forget, ask about automatic payment from your card.',
+    reply_en: 'Can I set up automatic payment?',
+    en_doc: null,
+    risk: 'medium'
+  },
+  {
+    id: 'tel_number_porting',
+    scenario: 'telecom',
+    hu: 'Számhordozást szeretne?',
+    variants: [
+      'Melyik szolgáltatótól hozza át a számát?',
+      'A számát át tudjuk hozni a másik szolgáltatótól.'
+    ],
+    keywords: ['számhordozást', 'számhordozás', 'szolgáltatótól', 'számát', 'hozza'],
+    ru_meaning: 'Спрашивают, хотите ли вы перенести свой венгерский номер от другого оператора (számhordozás).',
+    ru_action: 'Скажите да, если хотите сохранить номер. Спросите, нужно ли самим что-то делать у старого оператора и не будет ли там штрафа по договору.',
+    reply_hu: 'Igen, szeretném megtartani a számomat.',
+    reply_ru: 'Да, я хочу сохранить свой номер.',
+    ru_doc: 'Паспорт',
+    en_meaning: 'They ask whether you want to bring your Hungarian number over from another provider (számhordozás).',
+    en_action: 'Say yes if you want to keep your number. Ask whether you need to do anything with the old provider, and whether the old contract has a cancellation penalty.',
+    reply_en: 'Yes, I would like to keep my number.',
+    en_doc: 'Passport',
+    risk: 'medium'
+  },
+  {
+    id: 'tel_roaming',
+    scenario: 'telecom',
+    hu: 'Az Európai Unión kívül a roaming külön díjas.',
+    variants: [
+      'EU-n kívül a mobilnet nagyon drága lehet.',
+      'A roamingdíj országonként eltér.'
+    ],
+    keywords: ['roaming', 'roamingdíj', 'unión', 'eu-n', 'országonként'],
+    ru_meaning: 'Говорят, что за пределами ЕС звонки и мобильный интернет оплачиваются отдельно и могут стоить дорого.',
+    ru_action: 'Спросите цену за 1 ГБ и минуту звонка в вашей стране. Если не уверены, выключите роуминг данных и пользуйтесь Wi-Fi или местной SIM-картой.',
+    reply_hu: 'Mennyibe kerül egy gigabájt az én országomban?',
+    reply_ru: 'Сколько стоит один гигабайт в моей стране?',
+    ru_doc: null,
+    en_meaning: 'They say that outside the EU calls and mobile data are charged separately and can be expensive.',
+    en_action: 'Ask the price per GB and per minute in your country. If unsure, switch off data roaming and use Wi-Fi or a local SIM card.',
+    reply_en: 'How much does one gigabyte cost in my country?',
+    en_doc: null,
+    risk: 'medium'
+  },
+  /* How a clerk explains the two kinds of plan, and terms from a provider's
+   * tariff page. Prices are deliberately NOT in the corpus: they belong to one
+   * provider, change with promotions and inflation, and a stale amount shown
+   * with confidence is the failure this app exists to avoid. */
+  {
+    id: 'tel_prepaid_explained',
+    scenario: 'telecom',
+    /* "egyenlege" is avoided: it is a bank-balance keyword. */
+    hu: 'A feltöltőkártyásnál előre fizet, és csak az egyenlegéből tud telefonálni és internetezni.',
+    variants: [
+      /* No "számla" in the variants: it means both bill and bank account,
+       * and pulled these to bank_proof_account. */
+      'Előre feltölti a kártyát, és abból telefonál.',
+      'Ha elfogy a pénz a kártyán, újra fel kell tölteni.'
+    ],
+    keywords: ['egyenlegéből', 'feltölti', 'feltölteni', 'elfogy', 'internetezni', 'telefonálni'],
+    ru_meaning: 'Объясняют тариф с предоплатой: вы заранее пополняете баланс и звоните и пользуетесь интернетом, пока на нём есть деньги.',
+    ru_action: 'Ежемесячного счёта нет, обычно нет и договора на срок. Когда деньги закончатся, звонки и интернет остановятся, пока вы не пополните баланс. Спросите, где и как пополнять.',
+    reply_hu: 'Hol tudom feltölteni?',
+    reply_ru: 'Где я могу пополнить баланс?',
+    ru_doc: null,
+    en_meaning: 'They explain prepaid: you top up your balance in advance and can call and use data while there is money on it.',
+    en_action: 'There is no monthly bill and usually no fixed-term contract. When the money runs out, calls and data stop until you top up. Ask where and how to top up.',
+    reply_en: 'Where can I top it up?',
+    en_doc: null,
+    risk: 'low'
+  },
+  {
+    id: 'tel_postpaid_explained',
+    scenario: 'telecom',
+    hu: 'A havidíjasnál havonta fix díjat fizet, a számlát utólag kapja meg.',
+    variants: [
+      'Minden hónapban ugyanannyit fizet, utólag.',
+      'A havidíjat utólag, havonta kell befizetni.'
+    ],
+    keywords: ['havidíjasnál', 'havonta', 'utólag', 'fix', 'befizetni', 'ugyanannyit'],
+    ru_meaning: 'Объясняют ежемесячный тариф: вы платите фиксированную сумму каждый месяц, а счёт приходит после.',
+    ru_action: 'Обычно такой тариф оформляют по договору. Спросите, есть ли hűségidő (срок обязательств) и может ли цена вырасти.',
+    reply_hu: 'Van hűségidő ehhez a csomaghoz?',
+    reply_ru: 'Есть ли у этого тарифа срок обязательств?',
+    ru_doc: null,
+    en_meaning: 'They explain a monthly plan: you pay a fixed fee every month and the bill comes afterwards.',
+    en_action: 'It usually comes with a contract. Ask whether there is a hűségidő (commitment period) and whether the price can go up.',
+    reply_en: 'Is there a commitment period for this plan?',
+    en_doc: null,
+    risk: 'medium'
+  },
+  {
+    id: 'tel_rollover_data',
+    scenario: 'telecom',
+    hu: 'A fel nem használt adat átkerül a következő hónapra.',
+    variants: [
+      'Görgethető adatkeretet kínálunk.',
+      'A maradék adat a következő hónapban is megmarad.'
+    ],
+    keywords: ['görgethető', 'átkerül', 'következő', 'használt', 'adatkeretet', 'maradék', 'megmarad'],
+    ru_meaning: 'Говорят, что неиспользованный интернет-трафик переносится на следующий месяц (görgethető adat).',
+    ru_action: 'Делать ничего не нужно, это вам выгодно. Спросите, сколько месяцев перенесённый трафик остаётся действительным.',
+    reply_hu: 'Meddig marad meg a maradék adat?',
+    reply_ru: 'Сколько хранится оставшийся трафик?',
+    ru_doc: null,
+    en_meaning: 'They say unused data carries over to the next month (görgethető adat).',
+    en_action: 'Nothing to do; this is in your favour. Ask how long carried-over data stays valid.',
+    reply_en: 'How long does the leftover data last?',
+    en_doc: null,
+    risk: 'low'
+  },
+  {
+    id: 'tel_device_contract',
+    scenario: 'telecom',
+    hu: 'Ha telefont is vesz a csomaghoz, két évre köti a szerződést.',
+    variants: [
+      'Készülékvásárlással a szerződés két évre szól.',
+      'Telefon nélkül csak egy évre kell szerződnie.'
+    ],
+    keywords: ['telefont', 'vesz', 'köti', 'készülékvásárlással', 'szerződnie'],
+    ru_meaning: 'Говорят: если вместе с тарифом купить телефон, договор будет на два года; без телефона — на год.',
+    ru_action: 'Если вы уедете из Венгрии раньше чем через два года, не берите телефон вместе с тарифом: досрочное расторжение будет стоить денег. Спросите сумму штрафа.',
+    reply_hu: 'Akkor telefon nélkül kérem.',
+    reply_ru: 'Тогда без телефона, пожалуйста.',
+    ru_doc: null,
+    en_meaning: 'They say that buying a phone with the plan means a two-year contract; without a phone it is one year.',
+    en_action: 'If you may leave Hungary within two years, do not buy the phone with the plan: cancelling early will cost money. Ask what the penalty is.',
+    reply_en: 'Then without a phone, please.',
+    en_doc: null,
+    risk: 'high'
+  },
+  {
+    id: 'tel_indefinite_contract',
+    scenario: 'telecom',
+    hu: 'Ez határozatlan idejű szerződés.',
+    variants: [
+      'A szerződésnek nincs lejárata.',
+      'Határozatlan időre szól az előfizetés.'
+    ],
+    keywords: ['határozatlan', 'idejű', 'lejárata', 'időre'],
+    ru_meaning: 'Говорят, что договор бессрочный (határozatlan idejű): у него нет даты окончания.',
+    ru_action: 'Он продолжается, пока вы его не расторгнете, даже если вы уехали. Спросите, за сколько дней нужно предупредить и как расторгнуть. Расторгните до отъезда из Венгрии.',
+    reply_hu: 'Hogyan és mennyi idővel előre lehet felmondani?',
+    reply_ru: 'Как и за сколько времени нужно предупредить о расторжении?',
+    ru_doc: null,
+    en_meaning: 'They say the contract is indefinite (határozatlan idejű): it has no end date.',
+    en_action: 'It keeps running until you cancel it, even after you leave. Ask how much notice you must give and how to cancel. Cancel before you leave Hungary.',
+    reply_en: 'How, and how far in advance, can I cancel?',
+    en_doc: null,
+    risk: 'medium'
+  },
+  {
+    id: 'tel_price_increase',
+    scenario: 'telecom',
+    hu: 'A díjak évente változhatnak az infláció szerint.',
+    variants: [
+      'Az árat évente az inflációhoz igazítjuk.',
+      'Jövőre emelkedhet a havidíj.'
+    ],
+    keywords: ['infláció', 'inflációhoz', 'évente', 'igazítjuk', 'emelkedhet', 'változhatnak'],
+    ru_meaning: 'Говорят, что цена может меняться каждый год вместе с инфляцией.',
+    ru_action: 'Не рассчитывайте, что цена останется прежней: она может вырасти раз в год. Это не ошибка в счёте. Спросите, на сколько она выросла в прошлый раз.',
+    reply_hu: 'Tavaly mennyivel emelkedett?',
+    reply_ru: 'На сколько она выросла в прошлом году?',
+    ru_doc: null,
+    en_meaning: 'They say the price can change every year in line with inflation.',
+    en_action: 'Do not count on the price staying the same: it can go up once a year. That is not a mistake on your bill. Ask how much it went up last time.',
+    reply_en: 'How much did it go up last year?',
+    en_doc: null,
+    risk: 'medium'
+  },
+  {
+    id: 'tel_unlimited_domestic',
+    scenario: 'telecom',
+    /* "külföldön" is avoided: it is a keyword of a clinic card. */
+    hu: 'A korlátlan adat csak belföldön érvényes.',
+    variants: [
+      'Csak Magyarországon korlátlan az internet.',
+      'Belföldön korlátlan, az unióban van adatkeret.'
+    ],
+    keywords: ['belföldön', 'magyarországon', 'unióban', 'csak'],
+    ru_meaning: 'Говорят, что безлимитный интернет действует только внутри Венгрии.',
+    ru_action: 'За границей безлимита нет: в ЕС обычно есть ограниченный объём, вне ЕС трафик платный и может стоить дорого. Спросите, сколько ГБ включено в ЕС.',
+    reply_hu: 'Az unióban mennyi adat jár?',
+    reply_ru: 'Сколько трафика положено в ЕС?',
+    ru_doc: null,
+    en_meaning: 'They say unlimited data only applies inside Hungary.',
+    en_action: 'Abroad it is not unlimited: in the EU there is usually a set amount, and outside the EU data is charged and can be expensive. Ask how many GB are included in the EU.',
+    reply_en: 'How much data is included in the EU?',
+    en_doc: null,
+    risk: 'medium'
   }
 ];
 
@@ -5473,5 +5995,63 @@ window.ABLAK_SAY = [
     en: 'My tooth hurts.',
     alts_en: ['I have a toothache', 'I have a tooth ache', 'My tooth is hurting'],
     alts_ru: ['Зубная боль'],
+  },
+  {
+    id: 'say_tel_sim',
+    scenario: 'telecom',
+    label: 'Хочу SIM-карту',
+    hu: 'Szeretnék magyar SIM-kártyát venni.',
+    ru: 'Я хочу купить венгерскую SIM-карту.',
+    label_en: 'Buy a SIM card',
+    en: 'I would like to buy a Hungarian SIM card.',
+    alts_en: ['I need a SIM card', 'I want a Hungarian phone number'],
+    alts_ru: ['Мне нужна SIM-карта', 'Хочу венгерский номер'],
+  },
+  {
+    id: 'say_tel_difference',
+    scenario: 'telecom',
+    label: 'В чём разница между тарифами?',
+    /* "csomag" (package) is named on purpose: asked as "the two plans", the
+     * machine-translation fallback once rendered "plans" as "növény" (plants). */
+    hu: 'Kérem, magyarázza el, mi a különbség a két csomag között.',
+    ru: 'Объясните, пожалуйста, в чём разница между двумя тарифами.',
+    label_en: 'Difference between plans',
+    en: 'Please explain the difference between the two plans.',
+    alts_en: ['What is the difference between the two plans', 'Explain the difference between the two plans',
+              'What is the difference between the plans', 'What is the difference between prepaid and monthly'],
+    alts_ru: ['В чём разница между тарифами', 'Какая разница между тарифами', 'Объясните разницу между тарифами'],
+  },
+  {
+    id: 'say_tel_no_commitment',
+    scenario: 'telecom',
+    label: 'Без договора на 2 года',
+    hu: 'Hűségidő nélküli csomagot szeretnék.',
+    ru: 'Я хочу тариф без срока обязательств.',
+    label_en: 'No commitment period',
+    en: 'I would like a plan without a commitment period.',
+    alts_en: ['I do not want a two year contract', 'No long contract please'],
+    alts_ru: ['Не хочу договор на два года'],
+  },
+  {
+    id: 'say_tel_cancel_leaving',
+    scenario: 'telecom',
+    label: 'Уезжаю, расторгнуть договор',
+    hu: 'Elköltözöm Magyarországról. Hogyan mondhatom fel a szerződést?',
+    ru: 'Я уезжаю из Венгрии. Как расторгнуть договор?',
+    label_en: 'Leaving, cancel contract',
+    en: 'I am leaving Hungary. How can I cancel my contract?',
+    alts_en: ['I want to cancel my contract', 'How do I cancel my subscription'],
+    alts_ru: ['Хочу расторгнуть договор'],
+  },
+  {
+    id: 'say_tel_internet_broken',
+    scenario: 'telecom',
+    label: 'Не работает интернет',
+    hu: 'Tegnap óta nem működik a mobilinternetem.',
+    ru: 'У меня со вчерашнего дня не работает мобильный интернет.',
+    label_en: 'Mobile data not working',
+    en: 'My mobile internet has not worked since yesterday.',
+    alts_en: ['My mobile data is not working', 'My internet does not work'],
+    alts_ru: ['Не работает мобильный интернет'],
   }
 ];

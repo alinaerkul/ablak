@@ -553,7 +553,10 @@
         ['I have a headache', 'say_clinic_headache'],
         ['Говорите медленнее', 'say_slower'],
         ['Где молоко?', 'say_sm_where_milk'],
-        ['У меня болит голова', 'say_clinic_headache']
+        ['У меня болит голова', 'say_clinic_headache'],
+        /* Once fell through to machine translation, which said "plants". */
+        ['Explain the difference between the two plans', 'say_tel_difference'],
+        ['В чём разница между тарифами?', 'say_tel_difference']
       ];
       var wrong = asks.filter(function (a) {
         var r = SI.resolve(a[0]);
@@ -609,6 +612,12 @@
         /in plain Russian/.test(LL.systemPrompt('ru')) && !/English/.test(LL.systemPrompt('ru')));
       assert('llm: the explanation prompt still forbids naming a document',
         /Never invent a document name/.test(LL.systemPrompt('en')) && /Never invent a document name/.test(LL.systemPrompt('ru')));
+      /* "the two plans" was once translated as "a két növény" (plants). */
+      assert('llm: the translator is told "plan" means a package at a counter',
+        /csomag/.test(LL.translatePrompt) && /never a plant/.test(LL.translatePrompt));
+      assert('llm: the translator is told where the user is',
+        /mobile phone and internet shop/.test(LL.translateRequest('the two plans', 'en', 'telecom')) &&
+        !/They are at/.test(LL.translateRequest('the two plans', 'en', 'all')));
     }
 
     var WH = win.AblakWhisper;

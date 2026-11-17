@@ -233,6 +233,76 @@
       ]
     },
     {
+      /* Follows a real branch visit the author described: greeting, the list of
+       * documents, "all valid", a form, and "ready in two weeks, we will let
+       * you know by phone and email". In person, unlike the phone call above. */
+      id: 'bank_branch',
+      level: 'medium',
+      title: { en: 'Bank: get a card at a branch', ru: 'Банк: оформить карту в отделении' },
+      intro: { en: 'You visit a bank branch in person to get a new card. Have your documents ready.',
+               ru: 'Вы пришли в отделение банка, чтобы оформить новую карту. Держите документы наготове.' },
+      start: 'bb_start',
+      steps: [
+        S('bb_start', L('Jó napot kívánok! Miben segíthetek?',
+                        'Good day! How can I help?',
+                        'Здравствуйте! Чем могу помочь?'), [
+          O('Szeretnék egy új bankkártyát igényelni.', 'I would like to get a new bank card.', 'Я хотела бы оформить новую банковскую карту.',
+            ['bankkartya', 'igenyel'], 'bb_docs'),
+          O('Bankszámlát szeretnék nyitni.', 'I would like to open a bank account.', 'Я хотела бы открыть банковский счёт.',
+            ['bankszamla', 'nyit'], 'bb_docs')
+        ]),
+        S('bb_docs', L('Természetesen. Kérem az útlevelét, a tartózkodási engedélyét, a lakcímkártyáját és a diákigazolványát. A telefonszámára és az e-mail címére is szükségem lesz.',
+                       'Of course. Your passport, residence permit, address card and student ID, please. I will also need your phone number and email.',
+                       'Конечно. Ваш паспорт, ВНЖ, адресную карту и студенческий, пожалуйста. Также понадобятся номер телефона и имейл.'), [
+          O('Igen, megvannak. Tessék.', 'Yes, I have them. Here you are.', 'Да, они у меня есть. Вот, держите.',
+            ['megvan', 'tessek', '=igen'], 'bb_check'),
+          O('A lakcímkártyám a telefonomon van. Megfelel így?', 'My address card is on my phone. Is that okay?', 'Адресная карта у меня в телефоне. Так подойдёт?',
+            ['telefon', 'megfelel'], 'bb_phone_ok')
+        ]),
+        S('bb_phone_ok', L('Igen, a QR-kódot be tudom olvasni a telefonjáról.',
+                           'Yes, I can scan the QR code from your phone.',
+                           'Да, я могу отсканировать QR-код с вашего телефона.'), [
+          O('Rendben, köszönöm. Tessék.', 'Okay, thank you. Here it is.', 'Хорошо, спасибо. Вот, пожалуйста.',
+            ['rendben', 'koszon', 'tessek'], 'bb_check')
+        ]),
+        S('bb_check', L('Egy pillanat. Minden dokumentuma érvényes. Kérem, töltse ki ezt a nyomtatványt.',
+                        'One moment. Your documents are in order. Please fill in this form.',
+                        'Минуту. Ваши документы в порядке. Заполните, пожалуйста, этот бланк.'), [
+          O('Rendben. Hol kell aláírnom?', 'Okay. Where do I sign?', 'Хорошо. Где мне расписаться?',
+            ['hol', 'alair'], 'bb_contact'),
+          O('Segítene kitölteni? Nem értek mindent.', 'Could you help me fill it in? I do not understand everything.', 'Не могли бы вы помочь заполнить? Я понимаю не всё.',
+            ['segit', 'ertek'], 'bb_help')
+        ]),
+        S('bb_help', L('Persze. Ide írja a nevét, ide a lakcímét, és itt írja alá.',
+                       'Of course. Write your name here, your address here, and sign here.',
+                       'Конечно. Здесь напишите имя, здесь адрес, а здесь распишитесь.'), [
+          O('Köszönöm, így már értem.', 'Thank you, now I understand.', 'Спасибо, теперь понятно.',
+            ['koszon', 'ertem'], 'bb_contact')
+        ]),
+        S('bb_contact', L('Kérem a telefonszámát és az e-mail címét, hogy értesíthessük.',
+                          'Your phone number and email, please, so that we can let you know.',
+                          'Назовите номер телефона и имейл, чтобы мы могли вам сообщить.'), [
+          O('Nulla, harminc, egy, kettő, három, négy, öt, hat, hét.', 'Zero, thirty, one, two, three, four, five, six, seven. (say your own number and email)', 'Ноль, тридцать, один, два, три, четыре, пять, шесть, семь. (назовите свой номер и имейл)',
+            [], 'bb_ready', true)
+        ]),
+        S('bb_ready', L('Köszönöm. A kártyája két hét múlva készül el. Telefonon és e-mailben értesítjük.',
+                        'Thank you. Your card will be ready in two weeks. We will let you know by phone and email.',
+                        'Спасибо. Ваша карта будет готова через две недели. Мы сообщим вам по телефону и по имейлу.'), [
+          O('Itt kell majd átvennem?', 'Will I collect it here?', 'Забирать нужно будет здесь?',
+            ['itt', 'atvenn'], 'bb_pickup'),
+          O('Rendben, köszönöm szépen.', 'Okay, thank you very much.', 'Хорошо, большое спасибо.',
+            ['rendben', 'koszon'], 'bb_end')
+        ]),
+        S('bb_pickup', L('Igen, ebben a fiókban veheti át. Hozza magával az útlevelét.',
+                         'Yes, you can collect it at this branch. Bring your passport.',
+                         'Да, забрать можно в этом отделении. Возьмите с собой паспорт.'), [
+          O('Rendben, köszönöm szépen.', 'Okay, thank you very much.', 'Хорошо, большое спасибо.',
+            ['rendben', 'koszon'], 'bb_end')
+        ]),
+        S('bb_end', L('Szívesen. Viszontlátásra!', 'You are welcome. Goodbye!', 'Пожалуйста. До свидания!'), [], true)
+      ]
+    },
+    {
       id: 'supermarket',
       level: 'easy',
       title: { en: 'Supermarket: ask, weigh, pay', ru: 'Супермаркет: спросить, взвесить, оплатить' },
@@ -266,6 +336,85 @@
           O('Nem, köszönöm.', 'No, thank you.', 'Нет, спасибо.', ['=nem'], 's_end')
         ]),
         S('s_end', L('Köszönöm a vásárlást, viszontlátásra!', 'Thank you for shopping, goodbye!', 'Спасибо за покупку, до свидания!'), [], true)
+      ]
+    },
+    {
+      /* The branch that matters is the two-year commitment: a student who
+       * says yes without understanding hűségidő pays a penalty on leaving. */
+      id: 'sim',
+      level: 'easy',
+      title: { en: 'Mobile shop: buy a SIM card', ru: 'Салон связи: купить SIM-карту' },
+      intro: { en: 'You buy a Hungarian SIM card in a phone shop. Watch for the two-year commitment (hűségidő).',
+               ru: 'Вы покупаете венгерскую SIM-карту в салоне связи. Обратите внимание на договор на два года (hűségidő).' },
+      start: 's_start',
+      steps: [
+        S('s_start', L('Jó napot kívánok! Miben segíthetek?',
+                       'Good day! How can I help?',
+                       'Здравствуйте! Чем могу помочь?'), [
+          O('Szeretnék magyar SIM-kártyát venni. Külföldi diák vagyok.', 'I would like to buy a Hungarian SIM card. I am an international student.', 'Я хочу купить венгерскую SIM-карту. Я иностранная студентка.',
+            ['sim', 'kulfoldi', 'diak'], 's_type')
+        ]),
+        S('s_type', L('Feltöltőkártyás vagy havidíjas csomagot szeretne?',
+                      'Would you like a prepaid or a monthly plan?',
+                      'Вам тариф с предоплатой или с ежемесячной оплатой?'), [
+          O('Mi a különbség a kettő között?', 'What is the difference between the two?', 'В чём разница между ними?',
+            ['kulonbseg'], 's_explain'),
+          O('Feltöltőkártyásat szeretnék.', 'I would like prepaid.', 'Я хочу с предоплатой.',
+            ['feltolto'], 's_data'),
+          O('Havidíjasat szeretnék.', 'I would like a monthly plan.', 'Я хочу с ежемесячной оплатой.',
+            ['havidij'], 's_commit')
+        ]),
+        S('s_explain', L('A feltöltőkártyásat előre kell feltölteni, és bármikor abbahagyhatja. A havidíjasért minden hónapban fizet, általában szerződéssel.',
+                         'Prepaid is topped up in advance and you can stop any time. A monthly plan is paid every month, usually with a contract.',
+                         'Тариф с предоплатой пополняют заранее, и его можно прекратить в любой момент. За ежемесячный платят каждый месяц, обычно по договору.'), [
+          O('Akkor feltöltőkártyásat kérek.', 'Then prepaid, please.', 'Тогда с предоплатой, пожалуйста.',
+            ['feltolto'], 's_data'),
+          O('Akkor havidíjasat kérek.', 'Then a monthly plan, please.', 'Тогда ежемесячный, пожалуйста.',
+            ['havidij'], 's_commit')
+        ]),
+        S('s_commit', L('Két éves hűségidővel kedvezőbb a havidíj. Megfelel?',
+                        'With a two-year commitment the monthly fee is lower. Is that okay?',
+                        'С договором на два года абонентская плата ниже. Вам подходит?'), [
+          O('Két évig nem leszek itt. Hűségidő nélkül is lehet?', 'I will not be here for two years. Is it possible without a commitment?', 'Я не пробуду здесь два года. Можно без срока обязательств?',
+            ['nelkul', 'leszek'], 's_nocommit'),
+          O('Igen, megfelel.', 'Yes, that is fine.', 'Да, подходит.',
+            ['megfelel', '=igen'], 's_data')
+        ]),
+        S('s_nocommit', L('Persze, hűségidő nélkül is lehet, csak a havidíj magasabb.',
+                          'Of course, it is possible without a commitment, only the monthly fee is higher.',
+                          'Конечно, можно и без срока обязательств, просто абонентская плата выше.'), [
+          O('Rendben, úgy kérem.', 'Fine, I will take that.', 'Хорошо, давайте так.',
+            ['rendben', 'kerem'], 's_data')
+        ]),
+        S('s_data', L('Mennyi mobilinternetre van szüksége havonta?',
+                      'How much mobile data do you need per month?',
+                      'Сколько мобильного интернета вам нужно в месяц?'), [
+          O('Körülbelül húsz gigabájt elég.', 'About twenty gigabytes is enough.', 'Примерно двадцати гигабайт хватит.',
+            ['gigabajt', 'husz', '20', '=gb'], 's_docs'),
+          O('Korlátlan internetet szeretnék.', 'I would like unlimited data.', 'Я хочу безлимитный интернет.',
+            ['korlatlan'], 's_docs')
+        ]),
+        S('s_docs', L('Rendben. A regisztrációhoz kérem az útlevelét és a tartózkodási engedélyét.',
+                      'Fine. For the registration, your passport and residence permit, please.',
+                      'Хорошо. Для регистрации дайте, пожалуйста, паспорт и ВНЖ.'), [
+          O('Tessék, itt vannak.', 'Here they are.', 'Вот, пожалуйста.',
+            ['tessek', 'itt'], 's_number')
+        ]),
+        S('s_number', L('Köszönöm. Ez lesz az új telefonszáma. A SIM-kártya egy órán belül aktív lesz.',
+                        'Thank you. This will be your new phone number. The SIM card will be active within an hour.',
+                        'Спасибо. Это будет ваш новый номер. SIM-карта заработает в течение часа.'), [
+          O('Hogyan tudok fizetni?', 'How can I pay?', 'Как я могу оплачивать?',
+            ['hogyan', 'fizet'], 's_pay'),
+          O('Köszönöm szépen!', 'Thank you very much!', 'Большое спасибо!',
+            ['koszon'], 's_end')
+        ]),
+        S('s_pay', L('Az alkalmazásban, a honlapon vagy itt a boltban is fizethet.',
+                     'You can pay in the app, on the website, or here in the shop.',
+                     'Оплатить можно в приложении, на сайте или здесь в салоне.'), [
+          O('Köszönöm szépen!', 'Thank you very much!', 'Большое спасибо!',
+            ['koszon'], 's_end')
+        ]),
+        S('s_end', L('Szívesen, viszontlátásra!', 'You are welcome, goodbye!', 'Пожалуйста, до свидания!'), [], true)
       ]
     },
     {

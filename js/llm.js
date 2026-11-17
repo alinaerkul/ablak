@@ -276,10 +276,31 @@
     '- Never invent a document name, an amount, a date or a requirement.',
     '- Keep every number, name and date exactly as given.',
     '- Keep Hungarian diacritics (á é í ó ö ő ú ü ű).',
+    '- Use the meaning a word has at a counter, not its most common meaning:',
+    '  "plan" is a tariff or package (csomag, tarifacsomag), never a plant;',
+    '  "card" is a bank card or an ID card; "account" is a bank account.',
+    '  If the user says where they are, use the meaning that fits that place.',
     '- If the input is not a sentence you can translate, return "hu": "".'
   ].join('\n');
 
-  function translate(text, lang) {
+  /* Where the user is, in words the model understands. Added after "the two
+   * plans" came back as "a két növény" (plants): without the place, the model
+   * picked the everyday meaning of an ambiguous word. */
+  var PLACE_NAMES = {
+    immigration: 'the immigration office',
+    bank: 'a bank',
+    clinic: 'a clinic or hospital',
+    supermarket: 'a supermarket',
+    telecom: 'a mobile phone and internet shop (SIM cards, plans, home internet)'
+  };
+
+  function translateRequest(text, lang, place) {
+    var where = PLACE_NAMES[place] ? ' They are at ' + PLACE_NAMES[place] + '.' : '';
+    return 'The user spoke ' + (lang === 'ru' ? 'Russian' : 'English') + '.' + where +
+           ' Translate: "' + text + '"';
+  }
+
+  function translate(text, lang, place) {
     var config = loadConfig();
     if (!config || !config.apiKey) return Promise.resolve(null);
     var provider = PROVIDERS[config.provider];
@@ -287,7 +308,7 @@
 
     return chat(config, provider, [
       { role: 'system', content: TRANSLATE_PROMPT },
-      { role: 'user', content: 'The user spoke ' + (lang === 'ru' ? 'Russian' : 'English') + ': "' + text + '"' }
+      { role: 'user', content: translateRequest(text, lang, place) }
     ]).then(function (res) {
       if (!res.ok) {
         if (res.status === 401 || res.status === 403) return { error: 'bad-key' };
@@ -310,6 +331,8 @@
     translate: translate,
     pickModel: pickModel,
     systemPrompt: systemPrompt,
+    translatePrompt: TRANSLATE_PROMPT,
+    translateRequest: translateRequest,
     extractJson: extractJson
   };
 })();
