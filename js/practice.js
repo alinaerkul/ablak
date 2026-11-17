@@ -339,36 +339,42 @@
       ]
     },
     {
-      /* The branch that matters is the two-year commitment: a student who
-       * says yes without understanding hűségidő pays a penalty on leaving. */
+      /* Follows the flow the author wants to show: ask for a SIM card, not
+       * understand "prepaid or monthly", ask for the difference, choose,
+       * hand over the documents, pick a package, get the number. Packages are
+       * named by data amount only: prices are deliberately left out, because
+       * they belong to one provider and go out of date. The monthly branch
+       * keeps the two-year commitment (hűségidő) question, the real trap. */
       id: 'sim',
       level: 'easy',
       title: { en: 'Mobile shop: buy a SIM card', ru: 'Салон связи: купить SIM-карту' },
-      intro: { en: 'You buy a Hungarian SIM card in a phone shop. Watch for the two-year commitment (hűségidő).',
-               ru: 'Вы покупаете венгерскую SIM-карту в салоне связи. Обратите внимание на договор на два года (hűségidő).' },
+      intro: { en: 'You get your first Hungarian SIM card in a phone shop. If you do not understand a question, ask. Watch for the two-year commitment (hűségidő).',
+               ru: 'Вы оформляете первую венгерскую SIM-карту в салоне связи. Если вопрос непонятен, переспросите. Обратите внимание на договор на два года (hűségidő).' },
       start: 's_start',
       steps: [
         S('s_start', L('Jó napot kívánok! Miben segíthetek?',
                        'Good day! How can I help?',
                        'Здравствуйте! Чем могу помочь?'), [
+          O('Szeretnék egy SIM-kártyát. Még nincs magyar telefonszámom.', 'I would like a SIM card. I do not have a Hungarian phone number yet.', 'Я хотела бы SIM-карту. У меня пока нет венгерского номера.',
+            ['sim', 'telefonszam'], 's_type'),
           O('Szeretnék magyar SIM-kártyát venni. Külföldi diák vagyok.', 'I would like to buy a Hungarian SIM card. I am an international student.', 'Я хочу купить венгерскую SIM-карту. Я иностранная студентка.',
-            ['sim', 'kulfoldi', 'diak'], 's_type')
+            ['kulfoldi', 'diak', 'venni'], 's_type')
         ]),
         S('s_type', L('Feltöltőkártyás vagy havidíjas csomagot szeretne?',
                       'Would you like a prepaid or a monthly plan?',
                       'Вам тариф с предоплатой или с ежемесячной оплатой?'), [
-          O('Mi a különbség a kettő között?', 'What is the difference between the two?', 'В чём разница между ними?',
-            ['kulonbseg'], 's_explain'),
+          O('Nem értem. Elmagyarázná a különbséget?', 'I do not understand. Could you explain the difference?', 'Я не понимаю. Объясните, пожалуйста, разницу?',
+            ['kulonbseg', 'ertem', 'elmagyaraz'], 's_explain'),
           O('Feltöltőkártyásat szeretnék.', 'I would like prepaid.', 'Я хочу с предоплатой.',
-            ['feltolto'], 's_data'),
+            ['feltolto'], 's_docs'),
           O('Havidíjasat szeretnék.', 'I would like a monthly plan.', 'Я хочу с ежемесячной оплатой.',
             ['havidij'], 's_commit')
         ]),
-        S('s_explain', L('A feltöltőkártyásat előre kell feltölteni, és bármikor abbahagyhatja. A havidíjasért minden hónapban fizet, általában szerződéssel.',
-                         'Prepaid is topped up in advance and you can stop any time. A monthly plan is paid every month, usually with a contract.',
-                         'Тариф с предоплатой пополняют заранее, и его можно прекратить в любой момент. За ежемесячный платят каждый месяц, обычно по договору.'), [
+        S('s_explain', L('Persze. A feltöltőkártyásnál előre fizet, és csak addig telefonál, amíg van pénz a kártyán. Nincs szerződés, bármikor abbahagyhatja. A havidíjasnál minden hónapban ugyanannyit fizet, általában szerződéssel.',
+                         'Of course. With prepaid you pay in advance and can call only while there is money on the card. There is no contract and you can stop any time. With a monthly plan you pay the same amount every month, usually with a contract.',
+                         'Конечно. С предоплатой вы платите заранее и звоните, пока на карте есть деньги. Договора нет, можно прекратить в любой момент. С ежемесячным тарифом вы каждый месяц платите одну и ту же сумму, обычно по договору.'), [
           O('Akkor feltöltőkártyásat kérek.', 'Then prepaid, please.', 'Тогда с предоплатой, пожалуйста.',
-            ['feltolto'], 's_data'),
+            ['feltolto'], 's_docs'),
           O('Akkor havidíjasat kérek.', 'Then a monthly plan, please.', 'Тогда ежемесячный, пожалуйста.',
             ['havidij'], 's_commit')
         ]),
@@ -378,35 +384,45 @@
           O('Két évig nem leszek itt. Hűségidő nélkül is lehet?', 'I will not be here for two years. Is it possible without a commitment?', 'Я не пробуду здесь два года. Можно без срока обязательств?',
             ['nelkul', 'leszek'], 's_nocommit'),
           O('Igen, megfelel.', 'Yes, that is fine.', 'Да, подходит.',
-            ['megfelel', '=igen'], 's_data')
+            ['megfelel', '=igen'], 's_docs')
         ]),
         S('s_nocommit', L('Persze, hűségidő nélkül is lehet, csak a havidíj magasabb.',
                           'Of course, it is possible without a commitment, only the monthly fee is higher.',
                           'Конечно, можно и без срока обязательств, просто абонентская плата выше.'), [
           O('Rendben, úgy kérem.', 'Fine, I will take that.', 'Хорошо, давайте так.',
-            ['rendben', 'kerem'], 's_data')
+            ['rendben', 'kerem'], 's_docs')
         ]),
-        S('s_data', L('Mennyi mobilinternetre van szüksége havonta?',
-                      'How much mobile data do you need per month?',
-                      'Сколько мобильного интернета вам нужно в месяц?'), [
-          O('Körülbelül húsz gigabájt elég.', 'About twenty gigabytes is enough.', 'Примерно двадцати гигабайт хватит.',
-            ['gigabajt', 'husz', '20', '=gb'], 's_docs'),
-          O('Korlátlan internetet szeretnék.', 'I would like unlimited data.', 'Я хочу безлимитный интернет.',
-            ['korlatlan'], 's_docs')
+        S('s_docs', L('Rendben. Ehhez kérem az útlevelét, a tartózkodási engedélyét, a lakcímkártyáját és a diákigazolványát.',
+                      'Fine. For this I need your passport, residence permit, address card and student ID.',
+                      'Хорошо. Для этого нужны ваш паспорт, ВНЖ, адресная карта и студенческий.'), [
+          O('Igen, megvannak. Tessék.', 'Yes, I have them. Here you are.', 'Да, они у меня есть. Вот, держите.',
+            ['megvan', 'tessek', '=igen'], 's_plan'),
+          O('A lakcímkártyám a telefonomon van. Megfelel így?', 'My address card is on my phone. Is that okay?', 'Адресная карта у меня в телефоне. Так подойдёт?',
+            ['telefon', 'megfelel'], 's_phone_ok')
         ]),
-        S('s_docs', L('Rendben. A regisztrációhoz kérem az útlevelét és a tartózkodási engedélyét.',
-                      'Fine. For the registration, your passport and residence permit, please.',
-                      'Хорошо. Для регистрации дайте, пожалуйста, паспорт и ВНЖ.'), [
-          O('Tessék, itt vannak.', 'Here they are.', 'Вот, пожалуйста.',
-            ['tessek', 'itt'], 's_number')
+        S('s_phone_ok', L('Igen, a QR-kódot be tudom olvasni a telefonjáról.',
+                          'Yes, I can scan the QR code from your phone.',
+                          'Да, я могу отсканировать QR-код с вашего телефона.'), [
+          O('Rendben, köszönöm. Tessék.', 'Okay, thank you. Here it is.', 'Хорошо, спасибо. Вот, пожалуйста.',
+            ['rendben', 'koszon', 'tessek'], 's_plan')
         ]),
-        S('s_number', L('Köszönöm. Ez lesz az új telefonszáma. A SIM-kártya egy órán belül aktív lesz.',
-                        'Thank you. This will be your new phone number. The SIM card will be active within an hour.',
-                        'Спасибо. Это будет ваш новый номер. SIM-карта заработает в течение часа.'), [
-          O('Hogyan tudok fizetni?', 'How can I pay?', 'Как я могу оплачивать?',
-            ['hogyan', 'fizet'], 's_pay'),
+        S('s_plan', L('Köszönöm, minden rendben. Milyen csomagot választ? Van öt gigabájtos, húsz gigabájtos és korlátlan csomagunk.',
+                      'Thank you, everything is in order. Which package do you choose? We have a 5 GB, a 20 GB and an unlimited package.',
+                      'Спасибо, всё в порядке. Какой пакет выберете? Есть на 5 ГБ, на 20 ГБ и безлимитный.'), [
+          O('Az öt gigabájtosat kérem.', 'The 5 GB one, please.', 'Пакет на 5 ГБ, пожалуйста.',
+            ['=ot', '=5'], 's_number'),
+          O('A húsz gigabájtosat kérem.', 'The 20 GB one, please.', 'Пакет на 20 ГБ, пожалуйста.',
+            ['husz', '=20'], 's_number'),
+          O('A korlátlant kérem.', 'The unlimited one, please.', 'Безлимитный, пожалуйста.',
+            ['korlatlan'], 's_number')
+        ]),
+        S('s_number', L('Kész is. Ez az új telefonszáma. A SIM-kártya egy órán belül aktív lesz.',
+                        'All done. This is your new phone number. The SIM card will be active within an hour.',
+                        'Готово. Это ваш новый номер. SIM-карта заработает в течение часа.'), [
           O('Köszönöm szépen!', 'Thank you very much!', 'Большое спасибо!',
-            ['koszon'], 's_end')
+            ['koszon'], 's_end'),
+          O('Hogyan tudok fizetni?', 'How can I pay?', 'Как я могу оплачивать?',
+            ['hogyan', 'fizet'], 's_pay')
         ]),
         S('s_pay', L('Az alkalmazásban, a honlapon vagy itt a boltban is fizethet.',
                      'You can pay in the app, on the website, or here in the shop.',
