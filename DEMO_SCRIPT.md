@@ -34,9 +34,9 @@ behaviour, which is the point of the project.
 ### 0:25–0:50 — Why voice
 
 > Both hands are holding documents. My eyes are on the clerk. And I cannot type
-> a word I could not make out — Hungarian glues suffixes on, so *lakcímkártya*
-> arrives as *lakcímkártyáját*. A translation app needs me to spell something I
-> could not hear. A microphone does not.
+> a word I did not catch — Hungarian adds endings, so *lakcímkártya* (address
+> card) is heard as *lakcímkártyáját*, and I cannot spell that by ear. A
+> translation app needs me to spell it. A microphone does not.
 
 ### 0:50–1:30 — The core loop
 

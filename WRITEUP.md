@@ -19,7 +19,7 @@ Around the core there are four more tools: **say it in Hungarian** (speak Englis
 
 ## Why voice, and not a keyboard
 
-Both hands hold documents, and the clerk is waiting, so there is no time to type. And you cannot type a word you could not make out: *lakcímkártya* arrives as *lakcímkártyáját*. Where a keyboard works equally well (practice, the courier card), typing is offered too.
+Both hands hold documents and the clerk is waiting, so there is no time to type. And you cannot type a word you did not catch: Hungarian adds endings, so *lakcímkártya* (address card) is heard as *lakcímkártyáját*, which a newcomer cannot spell by ear. Where there is time and you know the words (practice, the courier card), typing works too.
 
 ## What it does differently
 

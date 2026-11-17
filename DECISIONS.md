@@ -99,8 +99,9 @@ type.
 - both hands hold documents;
 - eyes are on the clerk and the number display;
 - the clerk is waiting, so there are no fifteen seconds to type;
-- you cannot type a word you did not catch: *lakcímkártya* arrives as
-  *lakcímkártyáját*.
+- you cannot type a word you did not catch: Hungarian adds endings, so
+  *lakcímkártya* (address card) is heard as *lakcímkártyáját*, which a newcomer
+  cannot spell by ear.
 
 **Where typing is better, the app offers typing** — the practice answers and the
 courier card — because there the user has time and knows what they want to say.

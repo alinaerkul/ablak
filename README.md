@@ -159,9 +159,9 @@ The brief asks for the moments where a keyboard would not do. This is one:
 - **No time.** The clerk has asked a question and is waiting. Typing what you
   half-heard into a translation app takes fifteen seconds you do not have, and
   you cannot type a word you could not make out.
-- **You cannot spell what you cannot parse.** Hungarian agglutinates:
-  *lakcímkártya* arrives as *lakcímkártyáját*. A newcomer cannot retype that.
-  A microphone does not need them to.
+- **You cannot spell what you did not catch.** Hungarian adds endings, so
+  *lakcímkártya* (address card) is heard as *lakcímkártyáját*, which a newcomer
+  cannot spell by ear. A microphone does not need them to.
 - **The pressure is audible.** The app hears the real sentence, including the
   speed and the register that made it hard to follow in the first place.
 
